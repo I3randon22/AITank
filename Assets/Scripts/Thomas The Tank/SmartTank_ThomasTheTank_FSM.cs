@@ -71,7 +71,6 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                     //Debug.Log(body.velocity);
                     Vector3 enemyPredictedPos = (targetTankPosition.GetComponent<Rigidbody>().velocity * time) + targetTankPosition.transform.position;
                     GameObject enemyPredictedPosOBJ = new GameObject();
-
                     enemyPredictedPosOBJ.transform.position = enemyPredictedPos;
 
                     //get closer to target, and fire

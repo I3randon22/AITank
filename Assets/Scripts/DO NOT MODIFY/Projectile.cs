@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
             t -= Time.deltaTime;
         }
 
-        Debug.Log(rb.velocity.magnitude);
+        //Debug.Log(rb.velocity.magnitude);
     }
 
 
