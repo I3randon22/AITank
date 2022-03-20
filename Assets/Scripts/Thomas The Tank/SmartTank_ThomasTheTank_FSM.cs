@@ -13,14 +13,14 @@ public class SmartTank_ThomasTheTank_FSM : AITank
     public GameObject consumablePosition;
     public GameObject basePosition;
 
-    float t;
-    Rigidbody rb;
+    float currentTime;
+    Rigidbody body;
 
     //cant use start or update, use below instead
     public override void AITankStart()
     {
         InitFSM();
-        rb = GetComponent<Rigidbody>();
+        body = GetComponent<Rigidbody>();
     }
 
     void InitFSM()
@@ -43,11 +43,11 @@ public class SmartTank_ThomasTheTank_FSM : AITank
             {
                 consumablePosition = consumablesFound.First().Key;
                 FollowPathToPoint(consumablePosition, 1f);
-                t += Time.deltaTime;
-                if (t > 10)
+                currentTime += Time.deltaTime;
+                if (currentTime > 10)
                 {
                     GenerateRandomPoint();
-                    t = 0;
+                    currentTime = 0;
                 }
             }
             else
@@ -68,7 +68,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                 {
                     float distance = Vector3.Distance(transform.position, targetTankPosition.transform.position);
                     float time = distance / 60;
-                    //Debug.Log(rb.velocity);
+                    //Debug.Log(body.velocity);
                     Vector3 enemyPredictedPos = (targetTankPosition.GetComponent<Rigidbody>().velocity * time) + targetTankPosition.transform.position;
                     GameObject enemyPredictedPosOBJ = new GameObject();
 
@@ -115,11 +115,11 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                 consumablePosition = null;
                 basePosition = null;
                 FollowPathToRandomPoint(1f);
-                t += Time.deltaTime;
-                if (t > 10)
+                currentTime += Time.deltaTime;
+                if (currentTime > 10)
                 {
                     GenerateRandomPoint();
-                    t = 0;
+                    currentTime = 0;
                 }
             }
         }
