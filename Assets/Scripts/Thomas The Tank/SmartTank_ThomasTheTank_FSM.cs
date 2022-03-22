@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,7 +26,13 @@ public class SmartTank_ThomasTheTank_FSM : AITank
 
     void InitFSM()
     {
-        //put states and things
+        //creates a dictionary of all states 
+        Dictionary<Type, BaseState_ThomasTheTank_FSM> states = new Dictionary<Type, BaseState_ThomasTheTank_FSM>();
+        //Add all states like this to the dictionary
+        states.Add(typeof(PatrolState_ThomasTheTank_FSM), new PatrolState_ThomasTheTank_FSM(this));
+
+        //Set states
+       // GetComponent<FiniteStateMachine_ThomasTheTank_FSM>().SetStates(states);
     }
 
     public override void AITankUpdate()

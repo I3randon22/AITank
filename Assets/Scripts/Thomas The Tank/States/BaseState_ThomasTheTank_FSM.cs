@@ -1,18 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
-public class BaseState_ThomasTheTank_FSM : MonoBehaviour
+public abstract class BaseState_ThomasTheTank_FSM
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public abstract Type StateUpdate(); //Run once per frame
+    public abstract Type StateEnter(); //When something needs to be done when entering a state
+    public abstract Type StateExit(); //When something needs to be done when exiting state
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
