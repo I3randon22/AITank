@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseState_ThomasTheTank_FSM : MonoBehaviour
+public class BaseState_ThomasTheTank_FSM : AITank
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void AITankStart()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void AITankUpdate()
     {
-        
+
+    }
+
+    public override void AIOnCollisionEnter(Collision collision)
+    {
+
     }
 }
