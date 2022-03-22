@@ -14,15 +14,12 @@ public class DumbTank : AITank
     public GameObject basePosition;
 
     float t;
-    Rigidbody rb;
-
 
     /*******************************************************************************************************      
     WARNING, do not include void Start(), use AITankStart() instead if you want to use Start method from Monobehaviour.
     *******************************************************************************************************/
     public override void AITankStart()
     {
-        rb = GetComponent<Rigidbody>();
     }
 
     /*******************************************************************************************************       
@@ -64,20 +61,12 @@ public class DumbTank : AITank
             if (targetTanksFound.Count > 0 && targetTanksFound.First().Key != null)
             {
                 targetTankPosition = targetTanksFound.First().Key;
-                if(targetTankPosition != null)
+                if (targetTankPosition != null)
                 {
-                    float distance = Vector3.Distance(transform.position, targetTankPosition.transform.position);
-                    float time = distance / 60;
-                    //Debug.Log(rb.velocity);
-                    Vector3 enemyPredictedPos = (targetTankPosition.GetComponent<Rigidbody>().velocity * time) + targetTankPosition.transform.position;
-                    GameObject enemyPredictedPosOBJ = new GameObject();
-
-                    enemyPredictedPosOBJ.transform.position = enemyPredictedPos;
-
                     //get closer to target, and fire
-                    if(distance < 60f)
+                    if (Vector3.Distance(transform.position, targetTankPosition.transform.position) < 25f)
                     {
-                        FireAtPoint(enemyPredictedPosOBJ);
+                        FireAtPoint(targetTankPosition);
                     }
                     else
                     {
@@ -91,7 +80,7 @@ public class DumbTank : AITank
                 consumablePosition = consumablesFound.First().Key;
                 FollowPathToPoint(consumablePosition, 1f);
             }
-            else if (basesFound.Count > 0 )
+            else if (basesFound.Count > 0)
             {
                 //if base if found
                 basePosition = basesFound.First().Key;
