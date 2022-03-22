@@ -66,17 +66,10 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                 targetTankPosition = targetTanksFound.First().Key;
                 if (targetTankPosition != null)
                 {
-                    float distance = Vector3.Distance(transform.position, targetTankPosition.transform.position);
-                    float time = distance / 60;
-                    //Debug.Log(body.velocity);
-                    Vector3 enemyPredictedPos = (targetTankPosition.GetComponent<Rigidbody>().velocity * time) + targetTankPosition.transform.position;
-                    GameObject enemyPredictedPosOBJ = new GameObject();
-                    enemyPredictedPosOBJ.transform.position = enemyPredictedPos;
-
                     //get closer to target, and fire
-                    if (distance < 60f)
+                    if (Vector3.Distance(transform.position, targetTankPosition.transform.position) < 25f)
                     {
-                        FireAtPoint(enemyPredictedPosOBJ);
+                        FireAtPoint(targetTankPosition);
                     }
                     else
                     {
