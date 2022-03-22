@@ -126,7 +126,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
 
     public override void AIOnCollisionEnter(Collision collision)
     {
-        throw new System.NotImplementedException();
+      
     }
 
 }
