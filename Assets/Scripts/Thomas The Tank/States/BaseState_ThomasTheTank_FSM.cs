@@ -1,21 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
-public class BaseState_ThomasTheTank_FSM : AITank
+public abstract class BaseState_ThomasTheTank_FSM
 {
-    public override void AITankStart()
-    {
-        
-    }
+    public abstract Type StateUpdate(); //Run once per frame
+    public abstract Type StateEnter(); //When something needs to be done when entering a state
+    public abstract Type StateExit(); //When something needs to be done when exiting state
 
-    public override void AITankUpdate()
-    {
-
-    }
-
-    public override void AIOnCollisionEnter(Collision collision)
-    {
-
-    }
 }
