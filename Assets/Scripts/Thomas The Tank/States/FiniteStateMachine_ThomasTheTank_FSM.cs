@@ -6,6 +6,7 @@ using System.Linq;
 
 public class FiniteStateMachine_ThomasTheTank_FSM : MonoBehaviour
 {
+    /*
     private enum State
     {
         Patrol, // Tank is searching around for anything it sees
@@ -15,6 +16,11 @@ public class FiniteStateMachine_ThomasTheTank_FSM : MonoBehaviour
         Retreat, //Tank is low on specific item / Caugth attacking the Enemy Base
         LowStat // Tank is low on a specific stat, cycle through found items for the closest needed item
     }
+
+    private State enum_currentState;
+
+    */
+
 
     private Dictionary<Type, BaseState_ThomasTheTank_FSM> states;
     private BaseState_ThomasTheTank_FSM currentState;
@@ -36,23 +42,15 @@ public class FiniteStateMachine_ThomasTheTank_FSM : MonoBehaviour
         this.states = states;
     }
 
-    private State enum_currentState;
-
-    // Needed Scripts ------------------------------------------------------------------------
-    private PatrolState_ThomasTheTank_FSM patrolStateFSM;
-    // ---------------------------------------------------------------------------------------
-    private void Start()
+    public void Update()
     {
-       patrolStateFSM = gameObject.GetComponent<PatrolState_ThomasTheTank_FSM>();
-    }
-    private void Update()
-    {
-        if(CurrentState == null)
+        if (CurrentState == null)
         {
             CurrentState = states.Values.First();
         }
         else
         {
+            //CurrentState.StateUpdate();
             var nextState = CurrentState.StateUpdate();
 
             if(nextState != null && nextState != CurrentState.GetType())
@@ -61,6 +59,9 @@ public class FiniteStateMachine_ThomasTheTank_FSM : MonoBehaviour
             }
         }
 
+
+
+        /*
         switch(enum_currentState)
         {
             case State.Patrol:
@@ -94,6 +95,7 @@ public class FiniteStateMachine_ThomasTheTank_FSM : MonoBehaviour
 
                 break;
         }
+        */
     }
 
     void SwitchToState(Type nextState)
