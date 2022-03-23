@@ -50,7 +50,7 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
         {
             searchT += Time.deltaTime;
 
-            if(searchT < 5)
+            if(searchT < 10)
             {
                 smartTank.SearchRandomPoint();
             }
@@ -72,7 +72,7 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
                 }
             }
 
-            if(searchT >= 50)
+            if(searchT >= 20)
             {
                 searchT = 0;
             }

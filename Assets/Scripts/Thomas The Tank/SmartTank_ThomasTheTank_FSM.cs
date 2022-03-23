@@ -58,9 +58,9 @@ public class SmartTank_ThomasTheTank_FSM : AITank
 
     public void TurretSpin(int rotation)
     {
+        //Needs Fixing, feel free to fix it :)
         switch (rotation)
         {
-
             case 1:
                 lookPos = transform.forward + new Vector3(0, 0, 0);
                 Debug.Log(lookPos);
