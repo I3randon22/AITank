@@ -28,18 +28,12 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        //if tank is not moving spin turret/ Put in scout state??
-        if(!smartTank.IsMoving())
-        {
-           
-        }
-
         //if tank sees other tank go to chase state
         if (smartTank.targetTankPosition != null && smartTank.targetTanksFound.Count > 0)
         {
             return (typeof(ChaseState_ThomasTheTank_FSM));
 
-            /* Put in Attack state
+            /* Put in Attack state*
             if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
             {
                 Debug.Log("Attack");
@@ -48,6 +42,7 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
         }
         else
         {
+            //Goto random points(patrol) then stop and look around and scan for a bit
             searchT += Time.deltaTime;
 
             if(searchT < 10)
