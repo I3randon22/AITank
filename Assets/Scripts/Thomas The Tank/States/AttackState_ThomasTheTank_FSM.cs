@@ -3,25 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
+public class AttackState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
 {
     private SmartTank_ThomasTheTank_FSM smartTank;
-    float currentTime;
 
-    public PatrolState_ThomasTheTank_FSM(SmartTank_ThomasTheTank_FSM smartTank)
+    public AttackState_ThomasTheTank_FSM(SmartTank_ThomasTheTank_FSM smartTank)
     {
         this.smartTank = smartTank;
     }
 
     public override Type StateEnter()
     {
-        smartTank.stats["patrolState"] = true; // add this on every state
+        smartTank.stats["attackState"] = true; // add this on every state
         return null;
     }
 
     public override Type StateExit()
     {
-        smartTank.stats["patrolState"] = false; // add this on every state
+        smartTank.stats["attackState"] = false; // add this on every state
         return null;
     }
 
@@ -40,20 +39,20 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
         }
         */
 
-        smartTank.targetTankPosition = null;
-        smartTank.consumablePosition = null;
-        smartTank.basePosition = null;
-        //smartTank.FollowPathToRandomPoint(1f);
-        currentTime += Time.deltaTime;
-        if (currentTime > 10)
+
+
+        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
         {
-            //smartTank.GenerateRandomPoint();
-            currentTime = 0;
+            //smartTank.FireAtPoint(smartTank.targetTankPosition);
+        }
+        else
+        {
+            //smartTank.FollowPathToPoint(smartTank.targetTankPosition, 1f);
         }
 
         foreach (var item in smartTank.rules.GetRules)
         {
-            if(item.CheckRule(smartTank.stats) != null)
+            if (item.CheckRule(smartTank.stats) != null)
             {
                 return item.CheckRule(smartTank.stats);
             }

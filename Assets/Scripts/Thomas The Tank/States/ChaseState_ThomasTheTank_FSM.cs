@@ -3,25 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
+public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
 {
     private SmartTank_ThomasTheTank_FSM smartTank;
-    float currentTime;
 
-    public PatrolState_ThomasTheTank_FSM(SmartTank_ThomasTheTank_FSM smartTank)
+    public ChaseState_ThomasTheTank_FSM(SmartTank_ThomasTheTank_FSM smartTank)
     {
         this.smartTank = smartTank;
     }
 
     public override Type StateEnter()
     {
-        smartTank.stats["patrolState"] = true; // add this on every state
+        smartTank.stats["chaseState"] = true; // add this on every state
         return null;
     }
 
     public override Type StateExit()
     {
-        smartTank.stats["patrolState"] = false; // add this on every state
+        smartTank.stats["chaseState"] = false; // add this on every state
         return null;
     }
 
@@ -40,20 +39,9 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
         }
         */
 
-        smartTank.targetTankPosition = null;
-        smartTank.consumablePosition = null;
-        smartTank.basePosition = null;
-        //smartTank.FollowPathToRandomPoint(1f);
-        currentTime += Time.deltaTime;
-        if (currentTime > 10)
-        {
-            //smartTank.GenerateRandomPoint();
-            currentTime = 0;
-        }
-
         foreach (var item in smartTank.rules.GetRules)
         {
-            if(item.CheckRule(smartTank.stats) != null)
+            if (item.CheckRule(smartTank.stats) != null)
             {
                 return item.CheckRule(smartTank.stats);
             }

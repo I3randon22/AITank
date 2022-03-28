@@ -17,13 +17,47 @@ public class SmartTank_ThomasTheTank_FSM : AITank
     float currentTime;
     Rigidbody body;
 
+    public Dictionary<string, bool> stats = new Dictionary<string, bool>();
+    public Rules rules = new Rules();
+    public bool lowHealth;
+
     //cant use start or update, use below instead
     public override void AITankStart()
     {
         InitFSM();
         body = GetComponent<Rigidbody>();
+
+        stats.Add("lowHealth", lowHealth);
+        stats.Add("targetSpotted", false);
+        stats.Add("targetReached", false);
+        stats.Add("escapeState", false);
+        stats.Add("chaseState", false);
+        stats.Add("patrolState", false);
+        stats.Add("attackState", false);
+
+        rules.AddRule(new Rule("targetSpotted", "lowHealth", typeof(PatrolState_ThomasTheTank_FSM), Rule.Predicate.nAnd)); // if target hasnt been spotted and we arent on low health, go to patrol state
+        rules.AddRule(new Rule("chaseState", "lowHealth", typeof(EscapeState_ThomasTheTank_FSM), Rule.Predicate.And));
     }
 
+
+    public void CheckTargetReached()
+    {
+        if(Vector3.Distance(transform.position, targetTankPosition.transform.position) < 1.5f)
+        {
+            stats["targetReached"] = true;
+        }
+        else
+        {
+            stats["targetReached"] = false;
+        }
+    }
+
+    private void Update()
+    {
+        stats["lowHealth"] = lowHealth;
+
+
+    }
     void InitFSM()
     {
         //creates a dictionary of all states 
