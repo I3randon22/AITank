@@ -15,12 +15,14 @@ public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
     public override Type StateEnter()
     {
         smartTank.stats["chaseState"] = true; // add this on every state
+        Debug.Log("ChaseEnter");
         return null;
     }
 
     public override Type StateExit()
     {
         smartTank.stats["chaseState"] = false; // add this on every state
+        Debug.Log("ChaseExit");
         return null;
     }
 
@@ -46,7 +48,6 @@ public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
                 return item.CheckRule(smartTank.stats);
             }
         }
-
         return null;
     }
 }
