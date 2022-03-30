@@ -42,7 +42,7 @@ public class FiniteStateMachine_ThomasTheTank_FSM : MonoBehaviour
                 SwitchToState(nextState);
             }
         }
-
+        Debug.Log(CurrentState);
     }
 
     void SwitchToState(Type nextState)

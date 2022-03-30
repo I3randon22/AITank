@@ -22,9 +22,6 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
     {
 
         smartTank.stats["patrolState"] = true; // add this on every state
-
-        Debug.Log("PatrolEnter");
-
         return null;
     }
 
@@ -32,54 +29,46 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
     {
 
         smartTank.stats["patrolState"] = false; // add this on every state
-
-        Debug.Log("PatrolExit");
-
         return null;
     }
 
     public override Type StateUpdate()
     {
+        smartTank.SyncTanksFound();
         //if tank sees other tank go to chase state
-        if (smartTank.targetTankPosition != null && smartTank.targetTanksFound.Count > 0)
+        if (smartTank.targetTanksFound.Count > 0)
         {
-            return (typeof(ChaseState_ThomasTheTank_FSM));
-
-            /* Put in Attack state*
-            if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
-            {
-                Debug.Log("Attack");
-            }
-            */
+            smartTank.stats["targetSpotted"] = true;
+            return typeof(ChaseState_ThomasTheTank_FSM);
         }
         else
         {
-
-            //RandomPatrol();
-            return null;
+            RandomPatrol();
+            foreach (var item in smartTank.rules.GetRules)
+            {
+                if(item.CheckRule(smartTank.stats) != null)
+                {
+                    return item.CheckRule(smartTank.stats);
+                }
+            }
+            
         }
-     
 
+        return null;
+    }
+
+    private void RandomPatrol()
+    {
         smartTank.targetTankPosition = null;
         smartTank.consumablePosition = null;
         smartTank.basePosition = null;
-        //smartTank.FollowPathToRandomPoint(1f);
+        smartTank.FollowPoint(); // follows generate point
         currentTime += Time.deltaTime;
         if (currentTime > 10)
         {
-            //smartTank.GenerateRandomPoint();
+            smartTank.GeneratePoint(); // generates random point
             currentTime = 0;
         }
-
-        foreach (var item in smartTank.rules.GetRules)
-        {
-            if(item.CheckRule(smartTank.stats) != null)
-            {
-                return item.CheckRule(smartTank.stats);
-            }
-        }
-
-
             //Goto random points(patrol) then stop and look around and scan for a bit
             searchT += Time.deltaTime;
 
@@ -109,8 +98,6 @@ public class PatrolState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
             {
                 searchT = 0;
             }
-           
-        
-        return null;
+
     }
 }

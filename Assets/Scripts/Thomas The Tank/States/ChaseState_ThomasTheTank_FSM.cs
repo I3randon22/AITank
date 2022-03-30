@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
@@ -15,19 +16,28 @@ public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
     public override Type StateEnter()
     {
         smartTank.stats["chaseState"] = true; // add this on every state
-        Debug.Log("ChaseEnter");
         return null;
     }
 
     public override Type StateExit()
     {
         smartTank.stats["chaseState"] = false; // add this on every state
-        Debug.Log("ChaseExit");
         return null;
     }
 
     public override Type StateUpdate()
     {
+        smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
+        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
+        {
+            smartTank.stats["targetReached"] = true;
+            return (typeof(AttackState_ThomasTheTank_FSM));
+        }
+        else
+        {
+            smartTank.stats["targetReached"] = false;
+            smartTank.ChaseTank();          
+        }      
         foreach (var item in smartTank.rules.GetRules)
         {
             if (item.CheckRule(smartTank.stats) != null)
@@ -35,15 +45,7 @@ public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
                 return item.CheckRule(smartTank.stats);
             }
         }
-
-        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
-        {
-            return (typeof(AttackState_ThomasTheTank_FSM));
-        }
-        else
-        {
-            smartTank.ChaseTank();
-            return null;
-        }
+        
+        return null;
     }
 }

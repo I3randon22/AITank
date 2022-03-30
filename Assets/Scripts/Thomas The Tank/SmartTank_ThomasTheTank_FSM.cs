@@ -19,7 +19,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
 
     public Dictionary<string, bool> stats = new Dictionary<string, bool>();
     public Rules rules = new Rules();
-    public bool lowHealth;
+    public bool lowHealth = false;
 
     public bool firing;
     //cant use start or update, use below instead
@@ -38,27 +38,26 @@ public class SmartTank_ThomasTheTank_FSM : AITank
 
         rules.AddRule(new Rule("targetSpotted", "lowHealth", typeof(PatrolState_ThomasTheTank_FSM), Rule.Predicate.nAnd)); // if target hasnt been spotted and we arent on low health, go to patrol state
         rules.AddRule(new Rule("chaseState", "lowHealth", typeof(EscapeState_ThomasTheTank_FSM), Rule.Predicate.And));
-        rules.AddRule(new Rule("targetReached", "lowHealth", typeof(AttackState_ThomasTheTank_FSM), Rule.Predicate.nAnd));
+        rules.AddRule(new Rule("targetReached", "targetSpotted", typeof(AttackState_ThomasTheTank_FSM), Rule.Predicate.nAnd));
+        rules.AddRule(new Rule("targetSpotted", "patrolState", typeof(ChaseState_ThomasTheTank_FSM), Rule.Predicate.And));
     }
 
 
-    public void CheckTargetReached()
-    {
-        if(Vector3.Distance(transform.position, targetTankPosition.transform.position) < 1.5f)
-        {
-            stats["targetReached"] = true;
-        }
-        else
-        {
-            stats["targetReached"] = false;
-        }
-    }
+    
 
     private void Update()
     {
         stats["lowHealth"] = lowHealth;
-
-
+        
+        if(GetHealthLevel < 50)
+        {
+            lowHealth = true;
+        }
+        else
+        {
+            lowHealth = false;
+        }
+        firing = IsFiring;
     }
     void InitFSM()
     {
@@ -72,7 +71,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
         //Set states
         GetComponent<FiniteStateMachine_ThomasTheTank_FSM>().SetStates(states);
     }
-
+    
     public override void AITankUpdate()
     {
         //Get the targets found from the sensor view
@@ -80,7 +79,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
         consumablesFound = GetAllConsumablesFound;
         basesFound = GetAllBasesFound;
 
-        firing = IsFiring;
+        
         
         //if low health or ammo, go searching
         if (GetHealthLevel < 50 || GetAmmoLevel < 5)
@@ -88,7 +87,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
             if (consumablesFound.Count > 0)
             {
                 consumablePosition = consumablesFound.First().Key;
-                FollowPathToPoint(consumablePosition, 1f);
+                //FollowPathToPoint(consumablePosition, 1f);
                 currentTime += Time.deltaTime;
                 if (currentTime > 10)
                 {
@@ -101,7 +100,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                 targetTankPosition = null;
                 consumablePosition = null;
                 basePosition = null;
-                FollowPathToRandomPoint(1f);
+                //FollowPathToRandomPoint(1f);
             }
         }
         else
@@ -115,11 +114,11 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                     //get closer to target, and fire
                     if (Vector3.Distance(transform.position, targetTankPosition.transform.position) < 25f)
                     {
-                        FireAtPoint(targetTankPosition);
+                        //FireAtPoint(targetTankPosition);
                     }
                     else
                     {
-                        FollowPathToPoint(targetTankPosition, 1f);
+                        //FollowPathToPoint(targetTankPosition, 1f);
                     }
                 }
             }
@@ -138,11 +137,11 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                     //go close to it and fire
                     if (Vector3.Distance(transform.position, basePosition.transform.position) < 25f)
                     {
-                        FireAtPoint(basePosition);
+                        //FireAtPoint(basePosition);
                     }
                     else
                     {
-                        FollowPathToPoint(basePosition, 1f);
+                        //FollowPathToPoint(basePosition, 1f);
                     }
                 }
             }
@@ -152,7 +151,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
                 targetTankPosition = null;
                 consumablePosition = null;
                 basePosition = null;
-                FollowPathToRandomPoint(1f);
+                //FollowPathToRandomPoint(1f);
                 currentTime += Time.deltaTime;
                 if (currentTime > 10)
                 {
@@ -167,7 +166,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
     {
       
     }
-
+    // Chase Script ------------------------------------------------------------------------------- 
     public void ChaseTank()
     {
         if (targetTankPosition != null)
@@ -175,4 +174,35 @@ public class SmartTank_ThomasTheTank_FSM : AITank
             FollowPathToPoint(targetTankPosition, 1f);
         }
     }
+    // Attack Script ------------------------------------------------------------------------------
+    public void ShootTank()
+    {
+        if (targetTankPosition != null)
+        {
+            FireAtPoint(targetTankPosition);
+        }   
+    }
+
+    public void OrbitTank(GameObject NextLocation)
+    {
+        FollowPathToPoint(NextLocation, 1f);
+    }
+
+    // Patrol Script --------------------------------------------------------------------------------
+    public void GeneratePoint()
+    {
+        GenerateRandomPoint();
+    }
+
+    public void FollowPoint()
+    {
+        FollowPathToRandomPoint(1f);
+    }
+
+    public void SyncTanksFound()
+    {
+        targetTanksFound = GetAllTargetTanksFound;
+    }
+
+    // Escape Script --------------------------------------------------------------------------------
 }
