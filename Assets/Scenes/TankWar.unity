@@ -5818,11 +5818,11 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 355035932}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 66ca59249230228438ff930d13cd4a50, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.357
   m_Pitch: 1
   Loop: 1
@@ -77371,6 +77371,7 @@ GameObject:
   - component: {fileID: 1800502790}
   - component: {fileID: 1800502785}
   - component: {fileID: 1800502791}
+  - component: {fileID: 1800502792}
   m_Layer: 13
   m_Name: Tank
   m_TagString: Tank
@@ -77385,7 +77386,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800502784}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7031f3af84a3ab64f9c8d23d0032d8d1, type: 3}
   m_Name: 
@@ -77395,6 +77396,7 @@ MonoBehaviour:
   basePosition: {fileID: 0}
   lowHealth: 0
   firing: 0
+  Theme: {fileID: 0}
 --- !u!65 &1800502786
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -77562,6 +77564,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89e7b709596fed8468a7502cc504924a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1800502792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800502784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb66a83e0d0f26d488846e9ac1961a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTankPosition: {fileID: 0}
+  consumablePosition: {fileID: 0}
+  basePosition: {fileID: 0}
+  lowHealth: 0
+  firing: 0
+  Theme: {fileID: 0}
 --- !u!1 &1813624867
 GameObject:
   m_ObjectHideFlags: 0
@@ -77661,7 +77681,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817980624}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: fe0c1605b8518984286c2e4ddd4e8b6c, type: 3}

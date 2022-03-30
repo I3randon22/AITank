@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 
-public class SmartTank_ThomasTheTank_FSM : AITank
+public class SmartTank_ThomasTheTank_RBS : AITank
 {
     public Dictionary<GameObject, float> targetTanksFound = new Dictionary<GameObject, float>();
     public Dictionary<GameObject, float> consumablesFound = new Dictionary<GameObject, float>();
@@ -22,11 +23,15 @@ public class SmartTank_ThomasTheTank_FSM : AITank
     public bool lowHealth = false;
 
     public bool firing;
+    public AudioSource Theme;
+
     //cant use start or update, use below instead
     public override void AITankStart()
     {
         InitFSM();
         body = GetComponent<Rigidbody>();
+
+        Theme = GameObject.Find("ThomasTheTank").GetComponentInParent<AudioSource>();
 
         stats.Add("lowHealth", lowHealth);
         stats.Add("targetSpotted", false);
@@ -36,38 +41,21 @@ public class SmartTank_ThomasTheTank_FSM : AITank
         stats.Add("patrolState", false);
         stats.Add("attackState", false);
 
-        rules.AddRule(new Rule("targetSpotted", "lowHealth", typeof(PatrolState_ThomasTheTank_FSM), Rule.Predicate.nAnd)); // if target hasnt been spotted and we arent on low health, go to patrol state
-        rules.AddRule(new Rule("chaseState", "lowHealth", typeof(EscapeState_ThomasTheTank_FSM), Rule.Predicate.And));
-        rules.AddRule(new Rule("targetReached", "targetSpotted", typeof(AttackState_ThomasTheTank_FSM), Rule.Predicate.nAnd));
-        rules.AddRule(new Rule("targetSpotted", "patrolState", typeof(ChaseState_ThomasTheTank_FSM), Rule.Predicate.And));
+        rules.AddRule(new Rule("targetSpotted", "lowHealth", typeof(PatrolState_ThomasTheTank_RBS), Rule.Predicate.nAnd)); // if target hasnt been spotted and we arent on low health, go to patrol state
+        rules.AddRule(new Rule("chaseState", "lowHealth", typeof(EscapeState_ThomasTheTank_RBS), Rule.Predicate.And));
+        rules.AddRule(new Rule("targetReached", "targetSpotted", typeof(AttackState_ThomasTheTank_RBS), Rule.Predicate.nAnd));
+        rules.AddRule(new Rule("targetSpotted", "patrolState", typeof(ChaseState_ThomasTheTank_RBS), Rule.Predicate.And));
     }
 
-
-    
-
-    private void Update()
-    {
-        stats["lowHealth"] = lowHealth;
-        
-        if(GetHealthLevel < 50)
-        {
-            lowHealth = true;
-        }
-        else
-        {
-            lowHealth = false;
-        }
-        firing = IsFiring;
-    }
     void InitFSM()
     {
         //creates a dictionary of all states 
         Dictionary<Type, BaseState_ThomasTheTank_FSM> states = new Dictionary<Type, BaseState_ThomasTheTank_FSM>();
         //Add all states like this to the dictionary
-        states.Add(typeof(PatrolState_ThomasTheTank_FSM), new PatrolState_ThomasTheTank_FSM(this));
-        states.Add(typeof(AttackState_ThomasTheTank_FSM), new AttackState_ThomasTheTank_FSM(this));
-        states.Add(typeof(ChaseState_ThomasTheTank_FSM), new ChaseState_ThomasTheTank_FSM(this));
-        states.Add(typeof(EscapeState_ThomasTheTank_FSM), new EscapeState_ThomasTheTank_FSM(this));
+        states.Add(typeof(PatrolState_ThomasTheTank_RBS), new PatrolState_ThomasTheTank_RBS(this));
+        states.Add(typeof(AttackState_ThomasTheTank_RBS), new AttackState_ThomasTheTank_RBS(this));
+        states.Add(typeof(ChaseState_ThomasTheTank_RBS), new ChaseState_ThomasTheTank_RBS(this));
+        states.Add(typeof(EscapeState_ThomasTheTank_RBS), new EscapeState_ThomasTheTank_RBS(this));
         //Set states
         GetComponent<FiniteStateMachine_ThomasTheTank_FSM>().SetStates(states);
     }
@@ -166,6 +154,21 @@ public class SmartTank_ThomasTheTank_FSM : AITank
     {
       
     }
+
+    public void CheckHealth()
+    {
+        stats["lowHealth"] = lowHealth;
+
+        if (GetHealthLevel < 50)
+        {
+            lowHealth = true;
+        }
+        else
+        {
+            lowHealth = false;
+        }
+
+    }
     // Chase Script ------------------------------------------------------------------------------- 
     public void ChaseTank()
     {
@@ -180,6 +183,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
         if (targetTankPosition != null)
         {
             FireAtPoint(targetTankPosition);
+            firing = IsFiring;
         }   
     }
 

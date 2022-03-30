@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class AttackState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
+public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 {
-    private SmartTank_ThomasTheTank_FSM smartTank;
+    private SmartTank_ThomasTheTank_RBS smartTank;
     private GameObject TargetLocationRotation;
 
-    public AttackState_ThomasTheTank_FSM(SmartTank_ThomasTheTank_FSM smartTank)
+    public AttackState_ThomasTheTank_RBS(SmartTank_ThomasTheTank_RBS smartTank)
     {
         this.smartTank = smartTank;
     }
@@ -28,6 +28,14 @@ public class AttackState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
+        // Health Check -------------------------------------------------------------
+        smartTank.CheckHealth();
+        if (smartTank.lowHealth)
+        {
+            return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
+        }
+        // --------------------------------------------------------------------------
+
         if (smartTank.targetTanksFound.Count > 0 && smartTank.targetTanksFound.First().Key != null)
         {
             smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
@@ -41,6 +49,7 @@ public class AttackState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
                     bool NextPoint = true;
                     if (smartTank.firing)
                     {
+                        /*
                         int CirlePoint = 0; // which point of the circle do i follow
 
                         //Creates the circle around the tank ---------------------------------------------------------------------
@@ -63,7 +72,9 @@ public class AttackState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
                                 NextPoint = false;
                                 Debug.Log(TargetLocationRotation);
                             }
-                        }
+                        }*/
+
+
                     }
                     else
                     {
@@ -73,14 +84,14 @@ public class AttackState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
 
                     if (smartTank.stats["lowHealth"] == true)
                     {
-                        return typeof(EscapeState_ThomasTheTank_FSM);
+                        return typeof(EscapeState_ThomasTheTank_RBS);
                     }
 
                     return null;
                 }
                 else
                 {
-                    return typeof(ChaseState_ThomasTheTank_FSM);
+                    return typeof(ChaseState_ThomasTheTank_RBS);
                 }
 
             }

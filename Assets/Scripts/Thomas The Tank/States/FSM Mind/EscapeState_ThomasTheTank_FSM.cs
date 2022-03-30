@@ -5,22 +5,20 @@ using UnityEngine;
 
 public class EscapeState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
 {
-    private SmartTank_ThomasTheTank_FSM smartTank;
+    private MehSmartTank_ThomasTheTank_FSM smartTank;
 
-    public EscapeState_ThomasTheTank_FSM(SmartTank_ThomasTheTank_FSM smartTank)
+    public EscapeState_ThomasTheTank_FSM(MehSmartTank_ThomasTheTank_FSM smartTank)
     {
         this.smartTank = smartTank;
     }
 
     public override Type StateEnter()
     {
-        smartTank.stats["escapeState"] = true; // add this on every state
         return null;
     }
 
     public override Type StateExit()
     {
-        smartTank.stats["escapeState"] = false; // add this on every state
         return null;
     }
 
@@ -38,15 +36,6 @@ public class EscapeState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
             return null;
         }
         */
-
-        foreach (var item in smartTank.rules.GetRules)
-        {
-            if (item.CheckRule(smartTank.stats) != null)
-            {
-                return item.CheckRule(smartTank.stats);
-            }
-        }
-
         return null;
     }
 }
