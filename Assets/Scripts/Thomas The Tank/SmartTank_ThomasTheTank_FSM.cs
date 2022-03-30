@@ -21,6 +21,7 @@ public class SmartTank_ThomasTheTank_FSM : AITank
     public Rules rules = new Rules();
     public bool lowHealth;
 
+    public bool firing;
     //cant use start or update, use below instead
     public override void AITankStart()
     {
@@ -65,9 +66,11 @@ public class SmartTank_ThomasTheTank_FSM : AITank
         Dictionary<Type, BaseState_ThomasTheTank_FSM> states = new Dictionary<Type, BaseState_ThomasTheTank_FSM>();
         //Add all states like this to the dictionary
         states.Add(typeof(PatrolState_ThomasTheTank_FSM), new PatrolState_ThomasTheTank_FSM(this));
-
+        states.Add(typeof(AttackState_ThomasTheTank_FSM), new AttackState_ThomasTheTank_FSM(this));
+        states.Add(typeof(ChaseState_ThomasTheTank_FSM), new ChaseState_ThomasTheTank_FSM(this));
+        states.Add(typeof(EscapeState_ThomasTheTank_FSM), new EscapeState_ThomasTheTank_FSM(this));
         //Set states
-       // GetComponent<FiniteStateMachine_ThomasTheTank_FSM>().SetStates(states);
+        GetComponent<FiniteStateMachine_ThomasTheTank_FSM>().SetStates(states);
     }
 
     public override void AITankUpdate()
@@ -77,7 +80,8 @@ public class SmartTank_ThomasTheTank_FSM : AITank
         consumablesFound = GetAllConsumablesFound;
         basesFound = GetAllBasesFound;
 
-
+        firing = IsFiring;
+        
         //if low health or ammo, go searching
         if (GetHealthLevel < 50 || GetAmmoLevel < 5)
         {

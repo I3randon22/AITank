@@ -5818,7 +5818,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 355035932}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 66ca59249230228438ff930d13cd4a50, type: 3}
@@ -77393,6 +77393,8 @@ MonoBehaviour:
   targetTankPosition: {fileID: 0}
   consumablePosition: {fileID: 0}
   basePosition: {fileID: 0}
+  lowHealth: 0
+  firing: 0
 --- !u!65 &1800502786
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -77659,7 +77661,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817980624}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: fe0c1605b8518984286c2e4ddd4e8b6c, type: 3}
