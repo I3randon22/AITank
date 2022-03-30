@@ -168,4 +168,11 @@ public class SmartTank_ThomasTheTank_FSM : AITank
       
     }
 
+    public void ChaseTank()
+    {
+        if (targetTankPosition != null)
+        {
+            FollowPathToPoint(targetTankPosition, 1f);
+        }
+    }
 }

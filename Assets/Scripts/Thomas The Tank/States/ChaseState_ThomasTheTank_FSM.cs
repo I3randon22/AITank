@@ -28,19 +28,6 @@ public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        /**********************EXAMPLE*********************/
-        /* //If target becomes closer than 3 then change state to chase state
-        if(Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 3f)
-        {
-            return typeof(ChaseState);
-        }
-        else
-        {
-            RandomPatrol();
-            return null;
-        }
-        */
-
         foreach (var item in smartTank.rules.GetRules)
         {
             if (item.CheckRule(smartTank.stats) != null)
@@ -48,6 +35,15 @@ public class ChaseState_ThomasTheTank_FSM : BaseState_ThomasTheTank_FSM
                 return item.CheckRule(smartTank.stats);
             }
         }
-        return null;
+
+        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
+        {
+            return (typeof(AttackState_ThomasTheTank_FSM));
+        }
+        else
+        {
+            smartTank.ChaseTank();
+            return null;
+        }
     }
 }
