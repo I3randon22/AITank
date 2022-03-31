@@ -38,14 +38,6 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         //If we dont need health or ammo or fuel continue patrolling  
         if(smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
         {
-            // Stats Check -------------------------------------------------------No Longer Needed?
-            /*
-            smartTank.CheckStats();
-            if (smartTank.lowHealth || smartTank.lowFuel || smartTank.lowAmmo)
-            {
-                return typeof(EscapeState_ThomasTheTank_BTS); // changes the state to chase
-            }
-            */
 
             smartTank.SyncDataFound();
 
@@ -80,8 +72,11 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                     return typeof(AttackState_ThomasTheTank_BTS);
                 }
             }
+            else
+            {
+                RandomPatrol();
+            }
 
-            RandomPatrol();
             foreach (var item in smartTank.rules.GetRules)
             {
                 if (item.CheckRule(smartTank.stats) != null)
