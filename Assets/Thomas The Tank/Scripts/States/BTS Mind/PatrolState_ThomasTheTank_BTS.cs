@@ -96,7 +96,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         smartTank.targetTankPosition = null;
         smartTank.consumablePosition = null;
         smartTank.basePosition = null;
-
+        /*
         // Basic Patrol System --------------------------------------------------------------
         smartTank.FollowPoint(); //  basic follows generate point
         currentTime += Time.deltaTime;
@@ -105,23 +105,23 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             smartTank.GeneratePoint(); //  basic generates random point
             currentTime = 0;
         }
-
+        */
         // custom patrol system --------------------------------------------------------------------
         //Goto random points(patrol) then stop and look around and scan for a bit
         searchT += Time.deltaTime;
 
         if(searchT < 10)
         {
-            //smartTank.SearchRandomPoint();
+            smartTank.SearchRandomPoint();
         }
         else
         {
             t += Time.deltaTime;
 
-            if (t > 0.2)
+            if (t > 0.01)
             {
                 t = 0;
-                //smartTank.TurretSpin(rotation);
+                smartTank.TurretSpin(rotation);
                 //Debug.Log(rotation);
                 rotation += 1;
 
