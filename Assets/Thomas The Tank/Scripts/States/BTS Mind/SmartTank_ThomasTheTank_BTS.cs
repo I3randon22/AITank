@@ -165,7 +165,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
     {
         if (consumablesFound.Count > 0 && consumablesFound != null)
         {
-            if(consumablePosition.tag == null)
+            if(consumablePosition == null)
             {
                 for (int i = 0; i < consumablesFound.Count; i++)
                 {
