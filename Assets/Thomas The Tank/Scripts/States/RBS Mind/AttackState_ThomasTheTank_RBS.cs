@@ -75,11 +75,6 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                         NextPoint = true;
                     }
 
-                    if (smartTank.stats["lowHealth"] == true)
-                    {
-                        return typeof(EscapeState_ThomasTheTank_RBS);
-                    }
-
                     return null;
                 }
                 else
@@ -105,6 +100,8 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
         else
         {
+            smartTank.stats["targetSpotted"] = false;
+            smartTank.stats["targetReached"] = false;
             return typeof(PatrolState_ThomasTheTank_RBS);
         }
 

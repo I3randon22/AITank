@@ -82,9 +82,9 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                 {
                     return item.CheckRule(smartTank.stats);
                 }
-            }
-            
+            }           
         }
+
 
         return null;
     }

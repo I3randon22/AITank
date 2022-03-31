@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 {
     private SmartTank_ThomasTheTank_RBS smartTank;
+    float currentTime;
 
     public EscapeState_ThomasTheTank_RBS(SmartTank_ThomasTheTank_RBS smartTank)
     {
@@ -26,26 +28,21 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        /**********************EXAMPLE*********************/
-        /* //If target becomes closer than 3 then change state to chase state
-        if(Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 3f)
-        {
-            return typeof(ChaseState);
-        }
-        else
-        {
-            RandomPatrol();
-            return null;
-        }
-        */
-
         //seen consumables added to consumablesFound
-        smartTank.SyncConsumablesFound();
+        smartTank.SyncDataFound();
 
+        smartTank.CheckStats();
         //if the tank has sufficient resources, return to patrol state
         if ((smartTank.stats["lowHealth"] == false) && (smartTank.stats["lowAmmo"] == false) && (smartTank.stats["lowFuel"] == false))
         {
-            return typeof(PatrolState_ThomasTheTank_FSM);
+            if (smartTank.targetTanksFound.Count > 0)
+            {
+                smartTank.stats["targetSpotted"] = true; // tells the rules system we've found it
+
+                return typeof(ChaseState_ThomasTheTank_RBS); // changes the state to chase
+            }
+            else
+                return typeof(PatrolState_ThomasTheTank_FSM);
         }
         else
         {
@@ -61,32 +58,30 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                     {
                         Debug.Log("Going to Health");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
-                        smartTank.FollowToPoint(smartTank.consumablePosition);
+                        smartTank.GoToLocation(smartTank.consumablePosition);
                     }
                     else if (smartTank.stats["lowAmmo"] == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Ammo")
                     {
                         Debug.Log("Going to Ammo");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
-                        smartTank.FollowToPoint(smartTank.consumablePosition);
+                        smartTank.GoToLocation(smartTank.consumablePosition);
                     }
                     else if (smartTank.stats["lowFuel"] == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel")
                     {
                         Debug.Log("Going to Fuel");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
-                        smartTank.FollowToPoint(smartTank.consumablePosition);
+                        smartTank.GoToLocation(smartTank.consumablePosition);
                     }
                     else
                     {
-                        smartTank.RandomRoam();
-                        Debug.Log("Roaming for right resource");
+                        RandomRoam();
                     }
 
                 }
             }
             else
             {
-                //random roam if no consumables found
-                smartTank.RandomRoam();
+                RandomRoam();
             }
         }
 
@@ -99,5 +94,17 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
 
         return null;
+    }
+
+    private void RandomRoam()
+    {
+        // Basic Patrol System --------------------------------------------------------------
+        smartTank.FollowPoint(); //  basic follows generate point
+        currentTime += Time.deltaTime;
+        if (currentTime > 10)
+        {
+            smartTank.GeneratePoint(); //  basic generates random point
+            currentTime = 0;
+        }
     }
 }
