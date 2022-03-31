@@ -9,7 +9,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
     private SmartTank_ThomasTheTank_BTS smartTank;
 
     float currentTime;
-
+    Vector3[] scoutPoints = new Vector3[4];
     float t, searchT;
     int rotation;
 
@@ -21,7 +21,9 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
 
     public override Type StateEnter()
     {
-
+        t = 0;
+        searchT = 0;
+        rotation = 0;
         smartTank.stats["patrolState"] = true; // add this on every state
         return null;
     }
@@ -85,6 +87,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                 RandomPatrol();
             }
 
+
             foreach (var item in smartTank.rules.GetRules)
             {
                 if (item.CheckRule(smartTank.stats) != null)
@@ -102,6 +105,12 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         return null;
     }
 
+    private void SetScoutPoints()
+    {
+        scoutPoints[0] = new Vector3(46.5f, 0, 46.5f); //Starting pos(Top Right)
+        scoutPoints[1] = new Vector3(-41.5f, 0, 141.9f);//Top Left
+        scoutPoints[2] = new Vector3(28.2f, 0, 146.5f);//Top Middle
+    }
     
     private void RandomPatrol() 
     {
