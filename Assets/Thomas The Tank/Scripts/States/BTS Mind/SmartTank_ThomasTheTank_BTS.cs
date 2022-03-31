@@ -37,7 +37,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
     public BTAction fuelCheck;
     public BTAction targetFoundCheck;
     public BTAction targetReachedCheck;
-    public BTSequence regenSequence; //Health regen
+    public BTSequence regenSequence;
 
     //cant use start or update, use below instead
     public override void AITankStart()
@@ -83,7 +83,8 @@ public class SmartTank_ThomasTheTank_BTS : AITank
             //keeps running until success
             if (stats["lowHealth"])
             {
-                GrabResource("Health");
+                Debug.Log("Low Health");
+                //GrabResource("Health");
                 return BTNodesStates.FAILURE;
             }
             else //no longer low health so success and move on
@@ -102,7 +103,8 @@ public class SmartTank_ThomasTheTank_BTS : AITank
             //keeps running until success
             if (stats["lowAmmo"])
             {
-                GrabResource("Ammo");
+                Debug.Log("Low Ammo");
+                //GrabResource("Ammo");
                 return BTNodesStates.FAILURE;
             }
             else //no longer low ammo so success and move on
@@ -119,7 +121,8 @@ public class SmartTank_ThomasTheTank_BTS : AITank
         //keeps running until success
         if (stats["lowFuel"])
         {
-            GrabResource("Fuel");
+            Debug.Log("Low Fuel");
+            //GrabResource("Fuel");
             return BTNodesStates.FAILURE;
         }
         else //no longer low fuel so success and move on

@@ -35,9 +35,8 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        //BT--------------------------
-        //If we dont need health or ammo continue patrolling
-        if(smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
+        //If we dont need health or ammo or fuel continue patrolling
+        if(smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
         {
             // Stats Check -------------------------------------------------------No Longer Needed?
             /*
