@@ -210,7 +210,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
     {
         if(GetMyBases.Count < 2) //Base was Destroyed?
         {
-            ReturnToBase();
+            //ReturnToBase();
         }
     }
 
