@@ -138,6 +138,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
         //Check if target is found
         if (stats["targetSpotted"])
         {
+
             return BTNodesStates.SUCCESS;
         }
         else
@@ -227,9 +228,6 @@ public class SmartTank_ThomasTheTank_BTS : AITank
         basesFound = GetAllBasesFound;
 
         Application.targetFrameRate = 60;
-
-        
-
     }
 
     public override void AIOnCollisionEnter(Collision collision)
