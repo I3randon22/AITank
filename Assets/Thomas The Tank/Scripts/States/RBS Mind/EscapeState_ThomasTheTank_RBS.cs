@@ -33,7 +33,7 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
         smartTank.CheckStats();
         //if the tank has sufficient resources, return to patrol state
-        if ((smartTank.stats["lowHealth"] == false) && (smartTank.stats["lowAmmo"] == false) && (smartTank.stats["lowFuel"] == false))
+        if ((smartTank.lowHealth == false) && (smartTank.lowFuel == false) && (smartTank.lowAmmo == false))
         {
             if (smartTank.targetTanksFound.Count > 0)
             {
@@ -46,27 +46,26 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
         else
         {
-            if (smartTank.consumablesFound.Count > 0)
+            if (smartTank.consumablesFound.Count > 0 && smartTank.consumablesFound != null)
             {
-
                 //goes through all the consumables the tank has seen, checks their tags to see if its health ammo or fuel
                 //tank goes to which consumable it needs most, ie if its low on health and knows of a health kit, it goes to the health kit
 
                 for (int i = 0; i < smartTank.consumablesFound.Count; i++)
                 {
-                    if (smartTank.stats["lowHealth"] == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Health")
+                    if (smartTank.lowHealth == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Health")
                     {
                         Debug.Log("Going to Health");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
                         smartTank.GoToLocation(smartTank.consumablePosition);
                     }
-                    else if (smartTank.stats["lowAmmo"] == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Ammo")
+                    else if (smartTank.lowAmmo == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Ammo")
                     {
                         Debug.Log("Going to Ammo");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
                         smartTank.GoToLocation(smartTank.consumablePosition);
                     }
-                    else if (smartTank.stats["lowFuel"] == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel")
+                    else if (smartTank.lowFuel == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel")
                     {
                         Debug.Log("Going to Fuel");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;

@@ -26,12 +26,13 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         return null;
     }
 
+    bool NextPoint = true;
     public override Type StateUpdate()
     {
        
         // Stats Check -------------------------------------------------------------
         smartTank.CheckStats();
-        if (smartTank.lowHealth || smartTank.lowFuel)
+        if (smartTank.lowHealth || smartTank.lowFuel || smartTank.lowAmmo)
         {
             return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
         }
@@ -43,21 +44,18 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
             {
                 if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
                 {
-                    bool NextPoint = true;
+                    
                     if (smartTank.firing)
                     {
-                        
+                        Debug.Log("Fired");
                         int CirlePoint = 0; // which point of the circle do i follow
-
                         //Creates the circle around the tank ---------------------------------------------------------------------
                         TargetLocationRotation = new Vector3(
                                 smartTank.targetTankPosition.transform.position.x + 15 * Mathf.Cos(2 * Mathf.PI * CirlePoint / 8),
                                 smartTank.targetTankPosition.transform.position.y,
                                 smartTank.targetTankPosition.transform.position.z + 15 * Mathf.Sin(2 * Mathf.PI * CirlePoint / 8));
                         //--------------------------------------------------------------------------------------------------------
-
-                        smartTank.OrbitTank(TargetLocationRotation);
-
+                       
                         if (CirlePoint > 8)
                             CirlePoint = 0;
                         else
@@ -75,6 +73,7 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                         NextPoint = true;
                     }
 
+                    smartTank.OrbitTank(TargetLocationRotation);
                     return null;
                 }
                 else
@@ -86,15 +85,19 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
         else if (smartTank.basesFound.Count > 0)
         {
-            //if base if found
             smartTank.basePosition = smartTank.basesFound.First().Key;
             if (smartTank.basePosition != null)
             {
+                Debug.Log("Shoot");
                 //go close to it and fire
-                if (Vector3.Distance(smartTank.transform.position, smartTank.basePosition.transform.position) < 10f)
+                if (Vector3.Distance(smartTank.transform.position, smartTank.basePosition.transform.position) < 35f)
                 {
-                    Debug.Log("Shoot");
+                    
                     smartTank.ShootAt(smartTank.basePosition);
+                }
+                else
+                {
+                    smartTank.GoToLocation(smartTank.basePosition);
                 }
             }
         }

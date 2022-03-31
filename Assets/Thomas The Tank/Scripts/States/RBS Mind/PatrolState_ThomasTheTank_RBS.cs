@@ -37,7 +37,7 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
     {
         // Stats Check -------------------------------------------------------------
         smartTank.CheckStats();
-        if (smartTank.lowHealth || smartTank.lowFuel)
+        if (smartTank.lowHealth || smartTank.lowFuel || smartTank.lowAmmo)
         {
             return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
         }

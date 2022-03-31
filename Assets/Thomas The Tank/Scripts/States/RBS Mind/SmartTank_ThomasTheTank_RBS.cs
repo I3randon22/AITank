@@ -161,39 +161,7 @@ public class SmartTank_ThomasTheTank_RBS : AITank
       
     }
 
-    public void CheckStats()
-    {
-        stats["lowHealth"] = lowHealth;
-
-        if (GetHealthLevel < 50)
-        {
-            lowHealth = true;
-        }
-        else
-        {
-            lowHealth = false;
-        }
-
-
-        if (GetFuelLevel < 30)
-        {
-            lowFuel = true;
-        }
-        else
-        {
-            lowFuel = false;
-        }
-
-        
-        if(GetAmmoLevel < 5)
-        {
-            lowAmmo = true;
-        }
-        else
-        {
-            lowAmmo = false;
-        }
-    }
+   
     // Chase Script ------------------------------------------------------------------------------- 
     public void ChaseTank()
     {
@@ -206,7 +174,6 @@ public class SmartTank_ThomasTheTank_RBS : AITank
     public void ShootAt(GameObject Location)
     {
          FireAtPoint(Location);
-         firing = IsFiring;    
     }
 
     public void OrbitTank(Vector3 NextLocation)
@@ -239,4 +206,41 @@ public class SmartTank_ThomasTheTank_RBS : AITank
     }
 
     // Escape Script --------------------------------------------------------------------------------
+    public void CheckStats()
+    {
+        stats["lowHealth"] = lowHealth;
+        firing = IsFiring;
+
+        if (GetHealthLevel < 50)
+        {
+            lowHealth = true;
+            //Debug.Log("Health At: " + GetHealthLevel);
+        }
+        else
+        {
+            lowHealth = false;
+        }
+
+
+        if (GetFuelLevel < 30)
+        {
+            lowFuel = true;
+            //Debug.Log("Fuel At: " + GetFuelLevel);
+        }
+        else
+        {
+            lowFuel = false;
+        }
+
+        
+        if(GetAmmoLevel < 5)
+        {
+            lowAmmo = true;
+            //Debug.Log("Ammo At: " + GetAmmoLevel);
+        }
+        else
+        {
+            lowAmmo = false;
+        }
+    }
 }

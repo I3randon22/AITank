@@ -35,7 +35,7 @@ public class ChaseState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
 
         smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
-        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
+        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 30f)
         {
             smartTank.stats["targetReached"] = true; // changing the rules to found
             return (typeof(AttackState_ThomasTheTank_RBS));
