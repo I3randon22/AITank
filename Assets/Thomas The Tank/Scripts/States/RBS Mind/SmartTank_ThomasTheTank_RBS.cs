@@ -25,6 +25,7 @@ public class SmartTank_ThomasTheTank_RBS : AITank
 
     [HideInInspector] public bool lowHealth = false;
     [HideInInspector] public bool lowFuel = false;
+    [HideInInspector] public bool lowAmmo = false;
 
 
     [HideInInspector] public bool firing;
@@ -181,6 +182,16 @@ public class SmartTank_ThomasTheTank_RBS : AITank
         else
         {
             lowFuel = false;
+        }
+
+        
+        if(GetAmmoLevel < 5)
+        {
+            lowAmmo = true;
+        }
+        else
+        {
+            lowAmmo = false;
         }
     }
     // Chase Script ------------------------------------------------------------------------------- 
