@@ -46,43 +46,7 @@ public class EscapeState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         }
         else
         {
-            if (smartTank.consumablesFound.Count > 0 && smartTank.consumablesFound != null)
-            {
-                //goes through all the consumables the tank has seen, checks their tags to see if its health ammo or fuel
-                //tank goes to which consumable it needs most, ie if its low on health and knows of a health kit, it goes to the health kit
-                /*
-                for (int i = 0; i < smartTank.consumablesFound.Count; i++)
-                {
-                    if (smartTank.lowHealth == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Health")
-                    {
-                        Debug.Log("Going to Health");
-                        smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
-                        smartTank.GoToLocation(smartTank.consumablePosition);
-                    }
-                    else if (smartTank.lowAmmo == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Ammo")
-                    {
-                        Debug.Log("Going to Ammo");
-                        smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
-                        smartTank.GoToLocation(smartTank.consumablePosition);
-                    }
-                    else if (smartTank.lowFuel == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel")
-                    {
-                        Debug.Log("Going to Fuel");
-                        smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
-                        smartTank.GoToLocation(smartTank.consumablePosition);
-                    }
-                    else
-                    {
-                        RandomRoam();
-                    }
-
-                }
-                */
-            }
-            else
-            {
-                RandomRoam();
-            }
+            RandomRoam(); //RandomRoam until tank has sufficient resources
         }
 
         foreach (var item in smartTank.rules.GetRules)
