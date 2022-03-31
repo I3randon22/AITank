@@ -27,13 +27,12 @@ public class ChaseState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        // Health Check -------------------------------------------------------------
-        smartTank.CheckHealth();
-        if (smartTank.lowHealth)
+        // Stats Check -------------------------------------------------------------
+        smartTank.CheckStats();
+        if (smartTank.lowHealth || smartTank.lowFuel)
         {
             return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
         }
-        // --------------------------------------------------------------------------
 
         smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
         if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)

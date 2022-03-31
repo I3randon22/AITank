@@ -7,7 +7,7 @@ using UnityEngine;
 public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 {
     private SmartTank_ThomasTheTank_RBS smartTank;
-    private GameObject TargetLocationRotation;
+    private Vector3 TargetLocationRotation;
 
     public AttackState_ThomasTheTank_RBS(SmartTank_ThomasTheTank_RBS smartTank)
     {
@@ -28,38 +28,34 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        // Health Check -------------------------------------------------------------
-        smartTank.CheckHealth();
-        if (smartTank.lowHealth)
+       
+        // Stats Check -------------------------------------------------------------
+        smartTank.CheckStats();
+        if (smartTank.lowHealth || smartTank.lowFuel)
         {
             return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
         }
-        // --------------------------------------------------------------------------
 
         if (smartTank.targetTanksFound.Count > 0 && smartTank.targetTanksFound.First().Key != null)
         {
             smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
             if (smartTank.targetTankPosition != null)
             {
-
-
-
                 if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
                 {
                     bool NextPoint = true;
                     if (smartTank.firing)
                     {
-                        /*
+                        
                         int CirlePoint = 0; // which point of the circle do i follow
 
                         //Creates the circle around the tank ---------------------------------------------------------------------
-                        TargetLocationRotation.transform.position = new Vector3(
+                        TargetLocationRotation = new Vector3(
                                 smartTank.targetTankPosition.transform.position.x + 15 * Mathf.Cos(2 * Mathf.PI * CirlePoint / 8),
                                 smartTank.targetTankPosition.transform.position.y,
                                 smartTank.targetTankPosition.transform.position.z + 15 * Mathf.Sin(2 * Mathf.PI * CirlePoint / 8));
                         //--------------------------------------------------------------------------------------------------------
 
-                        Debug.Log(TargetLocationRotation);
                         smartTank.OrbitTank(TargetLocationRotation);
 
                         if (CirlePoint > 8)
@@ -70,15 +66,12 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                             {
                                 CirlePoint += 1;
                                 NextPoint = false;
-                                Debug.Log(TargetLocationRotation);
                             }
-                        }*/
-
-
+                        }
                     }
                     else
                     {
-                        smartTank.ShootTank();
+                        smartTank.ShootAt(smartTank.targetTankPosition);
                         NextPoint = true;
                     }
 
@@ -96,6 +89,27 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
             }
         }
+        else if (smartTank.basesFound.Count > 0)
+        {
+            //if base if found
+            smartTank.basePosition = smartTank.basesFound.First().Key;
+            if (smartTank.basePosition != null)
+            {
+                //go close to it and fire
+                if (Vector3.Distance(smartTank.transform.position, smartTank.basePosition.transform.position) < 10f)
+                {
+                    Debug.Log("Shoot");
+                    smartTank.ShootAt(smartTank.basePosition);
+                }
+            }
+        }
+        else
+        {
+            return typeof(PatrolState_ThomasTheTank_RBS);
+        }
+
+
+
         foreach (var item in smartTank.rules.GetRules)
         {
             if (item.CheckRule(smartTank.stats) != null)
@@ -105,4 +119,6 @@ public class AttackState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
         return null;
     }
+
+
 }

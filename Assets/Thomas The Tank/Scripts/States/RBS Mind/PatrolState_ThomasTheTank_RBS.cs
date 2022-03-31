@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
@@ -34,15 +35,14 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        // Health Check -------------------------------------------------------------
-        smartTank.CheckHealth();
-        if(smartTank.lowHealth)
+        // Stats Check -------------------------------------------------------------
+        smartTank.CheckStats();
+        if (smartTank.lowHealth || smartTank.lowFuel)
         {
             return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
         }
-        // --------------------------------------------------------------------------
 
-        smartTank.SyncTanksFound();
+        smartTank.SyncDataFound();
         //if tank sees other tank go to chase state
         if (smartTank.targetTanksFound.Count > 0)
         {
@@ -57,6 +57,21 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
             // ---------------------------------------------------------------------    
 
             return typeof(ChaseState_ThomasTheTank_RBS); // changes the state to chase
+        }
+        else if (smartTank.consumablesFound.Count > 0)
+        {
+            //if consumables are found, go to it.
+            smartTank.consumablePosition = smartTank.consumablesFound.First().Key;
+            smartTank.GoToLocation(smartTank.consumablePosition);
+        }
+        else if (smartTank.basesFound.Count > 0)
+        {
+            //if base if found
+            smartTank.basePosition = smartTank.basesFound.First().Key;
+            if (smartTank.basePosition != null)
+            {
+                return typeof(AttackState_ThomasTheTank_RBS);
+            }
         }
         else
         {

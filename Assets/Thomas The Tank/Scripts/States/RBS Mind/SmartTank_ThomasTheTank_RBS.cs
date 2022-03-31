@@ -15,14 +15,19 @@ public class SmartTank_ThomasTheTank_RBS : AITank
     public GameObject consumablePosition;
     public GameObject basePosition;
 
-    float currentTime;
+    public GameObject targetPrefab;
+
+    [HideInInspector] float currentTime;
     Rigidbody body;
 
     public Dictionary<string, bool> stats = new Dictionary<string, bool>();
     public Rules rules = new Rules();
-    public bool lowHealth = false;
 
-    public bool firing;
+    [HideInInspector] public bool lowHealth = false;
+    [HideInInspector] public bool lowFuel = false;
+
+
+    [HideInInspector] public bool firing;
     public AudioSource Theme;
 
     //cant use start or update, use below instead
@@ -30,7 +35,7 @@ public class SmartTank_ThomasTheTank_RBS : AITank
     {
         InitFSM();
         body = GetComponent<Rigidbody>();
-
+        targetPrefab = Instantiate<GameObject>(targetPrefab);
         Theme = GameObject.Find("ThomasTheTank").GetComponentInParent<AudioSource>();
 
         stats.Add("lowHealth", lowHealth);
@@ -155,7 +160,7 @@ public class SmartTank_ThomasTheTank_RBS : AITank
       
     }
 
-    public void CheckHealth()
+    public void CheckStats()
     {
         stats["lowHealth"] = lowHealth;
 
@@ -168,6 +173,15 @@ public class SmartTank_ThomasTheTank_RBS : AITank
             lowHealth = false;
         }
 
+
+        if (GetFuelLevel < 30)
+        {
+            lowFuel = true;
+        }
+        else
+        {
+            lowFuel = false;
+        }
     }
     // Chase Script ------------------------------------------------------------------------------- 
     public void ChaseTank()
@@ -178,18 +192,16 @@ public class SmartTank_ThomasTheTank_RBS : AITank
         }
     }
     // Attack Script ------------------------------------------------------------------------------
-    public void ShootTank()
+    public void ShootAt(GameObject Location)
     {
-        if (targetTankPosition != null)
-        {
-            FireAtPoint(targetTankPosition);
-            firing = IsFiring;
-        }   
+         FireAtPoint(Location);
+         firing = IsFiring;    
     }
 
-    public void OrbitTank(GameObject NextLocation)
+    public void OrbitTank(Vector3 NextLocation)
     {
-        FollowPathToPoint(NextLocation, 1f);
+        targetPrefab.transform.position = NextLocation;
+        FollowPathToPoint(targetPrefab, 1f);
     }
 
     // Patrol Script --------------------------------------------------------------------------------
@@ -203,9 +215,16 @@ public class SmartTank_ThomasTheTank_RBS : AITank
         FollowPathToRandomPoint(1f);
     }
 
-    public void SyncTanksFound()
+    public void SyncDataFound()
     {
         targetTanksFound = GetAllTargetTanksFound;
+        consumablesFound = GetAllConsumablesFound;
+        basesFound = GetAllBasesFound;
+    }
+
+    public void GoToLocation(GameObject Location)
+    {
+        FollowPathToPoint(Location, 1f);
     }
 
     // Escape Script --------------------------------------------------------------------------------
