@@ -54,8 +54,9 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                     GameObject.Find("Music").GetComponentInParent<AudioSource>().Stop();
                     smartTank.Theme.Play();
                 }
+                smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
                 // ---------------------------------------------------------------------    
-                if(Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 20)
+                if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 20)
                 {
                     return typeof(AttackState_ThomasTheTank_BTS); // changes the state to attack
                 }
