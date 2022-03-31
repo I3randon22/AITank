@@ -34,7 +34,7 @@ public class AttackState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         smartTank.CheckStats();
         if (smartTank.lowHealth || smartTank.lowFuel || smartTank.lowAmmo)
         {
-            return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
+            return typeof(EscapeState_ThomasTheTank_BTS); // changes the state to chase
         }
 
         if (smartTank.targetTanksFound.Count > 0 && smartTank.targetTanksFound.First().Key != null)

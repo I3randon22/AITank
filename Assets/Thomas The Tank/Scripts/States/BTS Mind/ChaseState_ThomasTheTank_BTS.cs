@@ -29,30 +29,46 @@ public class ChaseState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
     {
         // Stats Check -------------------------------------------------------------
         smartTank.CheckStats();
-        if (smartTank.lowHealth || smartTank.lowFuel)
-        {
-            return typeof(EscapeState_ThomasTheTank_BTS); // changes the state to chase
-        }
 
-        smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
-        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 30f)
+        //if low escape
+        if (smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() != BTNodesStates.SUCCESS)
         {
-            smartTank.stats["targetReached"] = true; // changing the rules to found
-            return (typeof(AttackState_ThomasTheTank_BTS));
+            return typeof(EscapeState_ThomasTheTank_BTS); // changes the state to escape
         }
-        else
+        else //if not low continue to chase
         {
-            smartTank.stats["targetReached"] = false;
-            smartTank.ChaseTank();          
-        }      
-        foreach (var item in smartTank.rules.GetRules)
-        {
-            if (item.CheckRule(smartTank.stats) != null)
+            //if enemy tank is found chase it
+            if (smartTank.targetTanksFound.Count > 0 && smartTank.targetTanksFound != null)
             {
-                return item.CheckRule(smartTank.stats);
+                smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
+
+                //if enemy tank is in range go to attack state and target is reached, if not chase it
+                if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 30f)
+                {
+                    smartTank.stats["targetReached"] = true; // changing the rules to found
+                    return (typeof(AttackState_ThomasTheTank_BTS));
+                }
+                else
+                {
+                    smartTank.stats["targetReached"] = false;
+                    smartTank.ChaseTank();
+                }
+            }
+            else //if enemy tank is not found go to patrol
+            {
+                return typeof(PatrolState_ThomasTheTank_BTS); //change state to patrol
+            }
+
+
+            foreach (var item in smartTank.rules.GetRules)
+            {
+                if (item.CheckRule(smartTank.stats) != null)
+                {
+                    return item.CheckRule(smartTank.stats);
+                }
             }
         }
-        
+
         return null;
     }
 }

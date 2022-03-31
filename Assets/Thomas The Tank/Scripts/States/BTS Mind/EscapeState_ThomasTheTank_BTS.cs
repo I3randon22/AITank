@@ -33,7 +33,7 @@ public class EscapeState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
 
         smartTank.CheckStats();
         //if the tank has sufficient resources, return to patrol state
-        if ((smartTank.lowHealth == false) && (smartTank.lowFuel == false) && (smartTank.lowAmmo == false))
+        if (smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
         {
             if (smartTank.targetTanksFound.Count > 0)
             {
@@ -50,7 +50,7 @@ public class EscapeState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             {
                 //goes through all the consumables the tank has seen, checks their tags to see if its health ammo or fuel
                 //tank goes to which consumable it needs most, ie if its low on health and knows of a health kit, it goes to the health kit
-
+                /*
                 for (int i = 0; i < smartTank.consumablesFound.Count; i++)
                 {
                     if (smartTank.lowHealth == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Health")
@@ -77,6 +77,7 @@ public class EscapeState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                     }
 
                 }
+                */
             }
             else
             {

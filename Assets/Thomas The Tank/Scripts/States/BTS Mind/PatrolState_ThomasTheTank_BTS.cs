@@ -35,7 +35,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
-        //If we dont need health or ammo or fuel continue patrolling
+        //If we dont need health or ammo or fuel continue patrolling  
         if(smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
         {
             // Stats Check -------------------------------------------------------No Longer Needed?
@@ -64,13 +64,13 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
 
                 return typeof(ChaseState_ThomasTheTank_BTS); // changes the state to chase
             }
-            else if (smartTank.consumablesFound.Count > 0)
+            else if (smartTank.consumablesFound.Count > 0) //Store location, save for later?
             {
                 //if consumables are found, go to it.
                 smartTank.consumablePosition = smartTank.consumablesFound.First().Key;
                 smartTank.GoToLocation(smartTank.consumablePosition);
             }
-            else if (smartTank.basesFound.Count > 0)
+            else if (smartTank.basesFound.Count > 0) //if base found attack it
             {
                 //if base if found
                 smartTank.basePosition = smartTank.basesFound.First().Key;
@@ -79,22 +79,16 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                     return typeof(AttackState_ThomasTheTank_BTS);
                 }
             }
-            else
+
+            RandomPatrol();
+            foreach (var item in smartTank.rules.GetRules)
             {
-                RandomPatrol();
-                foreach (var item in smartTank.rules.GetRules)
+                if (item.CheckRule(smartTank.stats) != null)
                 {
-                    if (item.CheckRule(smartTank.stats) != null)
-                    {
-                        return item.CheckRule(smartTank.stats);
-                    }
+                    return item.CheckRule(smartTank.stats);
                 }
             }
 
-        }
-        else
-        {
-            return typeof(EscapeState_ThomasTheTank_BTS); // changes the state to escape
         }
 
         return null;

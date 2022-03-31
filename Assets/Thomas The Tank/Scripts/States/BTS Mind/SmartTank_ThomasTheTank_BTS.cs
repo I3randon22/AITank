@@ -84,7 +84,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
             if (stats["lowHealth"])
             {
                 Debug.Log("Low Health");
-                //GrabResource("Health");
+                GrabResource("Health");
                 return BTNodesStates.FAILURE;
             }
             else //no longer low health so success and move on
@@ -104,7 +104,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
             if (stats["lowAmmo"])
             {
                 Debug.Log("Low Ammo");
-                //GrabResource("Ammo");
+                GrabResource("Ammo");
                 return BTNodesStates.FAILURE;
             }
             else //no longer low ammo so success and move on
@@ -122,7 +122,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
         if (stats["lowFuel"])
         {
             Debug.Log("Low Fuel");
-            //GrabResource("Fuel");
+            GrabResource("Fuel");
             return BTNodesStates.FAILURE;
         }
         else //no longer low fuel so success and move on
@@ -165,18 +165,31 @@ public class SmartTank_ThomasTheTank_BTS : AITank
     {
         if (consumablesFound.Count > 0 && consumablesFound != null)
         {
-            for (int i = 0; i < consumablesFound.Count; i++)
+            if(consumablePosition.tag == null)
             {
-                if (consumablesFound.ElementAt(i).Key.tag == resourceTag)
+                for (int i = 0; i < consumablesFound.Count; i++)
                 {
-                    consumablePosition = consumablesFound.ElementAt(i).Key;
-                    GoToLocation(consumablePosition);
+                    if (consumablesFound.ElementAt(i).Key.tag == resourceTag)
+                    {
+                        consumablePosition = consumablesFound.ElementAt(i).Key;
+                        break;
+                    }
+                    else
+                    {
+                        consumablePosition = null;
+                    }
                 }
             }
+            else
+            {
+                Debug.Log("Found " + resourceTag);
+                GoToLocation(consumablePosition);
+            }
+           
         }
         else
         {
-            Debug.Log("Low on " + resourceTag + "but cannot find any");
+            Debug.Log("Low on " + resourceTag + "but cannot find any...");
         }
     }
 
@@ -341,7 +354,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
 
         firing = IsFiring;
 
-        if (GetHealthLevel < 50)
+        if (GetHealthLevel < 100)
         {
             lowHealth = true;
             //Debug.Log("Health At: " + GetHealthLevel);
