@@ -18,6 +18,8 @@ public class MehSmartTank_ThomasTheTank_FSM : AITank
     float currentTime;
     Rigidbody body;
     public bool lowHealth = false;
+    public bool lowFuel = false;
+    public bool lowAmmo = false;
 
     public bool firing;
     public AudioSource Theme;
@@ -51,6 +53,7 @@ public class MehSmartTank_ThomasTheTank_FSM : AITank
         consumablesFound = GetAllConsumablesFound;
         basesFound = GetAllBasesFound;
 
+        Application.targetFrameRate = 60;
 
 
         //if low health or ammo, go searching
@@ -139,6 +142,8 @@ public class MehSmartTank_ThomasTheTank_FSM : AITank
 
     }
 
+    
+
     public void CheckHealth()
     {
         if (GetHealthLevel < 50)
@@ -151,6 +156,38 @@ public class MehSmartTank_ThomasTheTank_FSM : AITank
         }
 
     }
+
+    public void CheckStats()
+    {
+        if (GetHealthLevel < 50)
+        {
+            lowHealth = true;
+        }
+        else
+        {
+            lowHealth = false;
+        }
+
+        if (GetAmmoLevel < 4)
+        {
+            lowAmmo = true;
+        }
+        else
+        {
+            lowAmmo = false;
+        }
+
+        if(GetFuelLevel < 30)
+        {
+            lowFuel = true;
+        }
+        else
+        {
+            lowFuel = false;
+        }
+    }
+
+
     // Chase Script ------------------------------------------------------------------------------- 
     public void ChaseTank()
     {
@@ -185,11 +222,17 @@ public class MehSmartTank_ThomasTheTank_FSM : AITank
         FollowPathToRandomPoint(1f);
     }
 
-    public void SyncTanksFound()
+    public void SyncDataFound()
     {
         targetTanksFound = GetAllTargetTanksFound;
+        consumablesFound = GetAllConsumablesFound;
+        basesFound = GetAllBasesFound;
     }
 
     // Escape Script --------------------------------------------------------------------------------
+    public void GoToPoint(GameObject Destination)
+    {
+        FollowPathToPoint(Destination, 1f);
+    }
 }
 
