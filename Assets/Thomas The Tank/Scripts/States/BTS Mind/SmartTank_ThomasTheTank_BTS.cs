@@ -213,8 +213,8 @@ public class SmartTank_ThomasTheTank_BTS : AITank
         consumablesFound = GetAllConsumablesFound;
         basesFound = GetAllBasesFound;
 
-        
-        
+        Application.targetFrameRate = 60;
+
         //if low health or ammo, go searching
         if (GetHealthLevel < 50 || GetAmmoLevel < 5)
         {
@@ -354,7 +354,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
 
         firing = IsFiring;
 
-        if (GetHealthLevel < 100)
+        if (GetHealthLevel < 30)
         {
             lowHealth = true;
             //Debug.Log("Health At: " + GetHealthLevel);

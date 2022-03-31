@@ -34,17 +34,21 @@ public class ChaseState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
             return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
         }
 
-        smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
-        if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 30f)
+        if (smartTank.targetTanksFound.Count > 0 && smartTank.targetTanksFound.First().Key != null)
         {
-            smartTank.stats["targetReached"] = true; // changing the rules to found
-            return (typeof(AttackState_ThomasTheTank_RBS));
+            smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
+            if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 30f)
+            {
+                smartTank.stats["targetReached"] = true; // changing the rules to found
+                return (typeof(AttackState_ThomasTheTank_RBS));
+            }
+            else
+            {
+                smartTank.stats["targetReached"] = false;
+                smartTank.ChaseTank();
+            }
         }
-        else
-        {
-            smartTank.stats["targetReached"] = false;
-            smartTank.ChaseTank();          
-        }      
+
         foreach (var item in smartTank.rules.GetRules)
         {
             if (item.CheckRule(smartTank.stats) != null)

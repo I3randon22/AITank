@@ -69,6 +69,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                 //if consumables are found, go to it.
                 smartTank.consumablePosition = smartTank.consumablesFound.First().Key;
                 smartTank.GoToLocation(smartTank.consumablePosition);
+                
             }
             else if (smartTank.basesFound.Count > 0) //if base found attack it
             {
