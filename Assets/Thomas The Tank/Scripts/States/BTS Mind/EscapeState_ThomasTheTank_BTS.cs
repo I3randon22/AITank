@@ -46,7 +46,14 @@ public class EscapeState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         }
         else
         {
-            RandomRoam(); //RandomRoam until tank has sufficient resources
+            if (smartTank.consumablesFound.Count > 0 && smartTank.consumablesFound != null)
+            {
+ 
+            }
+            else
+            {
+                RandomRoam();
+            }
         }
 
         foreach (var item in smartTank.rules.GetRules)

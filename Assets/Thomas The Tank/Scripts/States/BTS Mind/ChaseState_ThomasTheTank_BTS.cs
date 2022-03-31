@@ -33,7 +33,7 @@ public class ChaseState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         //if low escape
         if (smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() != BTNodesStates.SUCCESS)
         {
-            return typeof(EscapeState_ThomasTheTank_BTS); // changes the state to escape
+            return typeof(PatrolState_ThomasTheTank_BTS); // changes the state to escape
         }
         else //if not low continue to chase
         {

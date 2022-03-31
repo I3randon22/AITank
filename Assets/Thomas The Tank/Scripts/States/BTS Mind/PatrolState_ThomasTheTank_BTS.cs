@@ -53,8 +53,16 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                     smartTank.Theme.Play();
                 }
                 // ---------------------------------------------------------------------    
+                if(Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 20)
+                {
+                    return typeof(AttackState_ThomasTheTank_BTS); // changes the state to attack
+                }
+                else
+                {
+                    return typeof(ChaseState_ThomasTheTank_BTS); // changes the state to chase
+                }
 
-                return typeof(ChaseState_ThomasTheTank_BTS); // changes the state to chase
+                
             }
             else if (smartTank.consumablesFound.Count > 0) //Store location, save for later?
             {
@@ -86,6 +94,10 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             }
 
         }
+        else
+        {
+            RandomPatrol();
+        }
 
         return null;
     }
@@ -96,7 +108,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         smartTank.targetTankPosition = null;
         smartTank.consumablePosition = null;
         smartTank.basePosition = null;
-
+        /*
         // Basic Patrol System --------------------------------------------------------------
         smartTank.FollowPoint(); //  basic follows generate point
         currentTime += Time.deltaTime;
@@ -105,14 +117,14 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             smartTank.GeneratePoint(); //  basic generates random point
             currentTime = 0;
         }
-
+        */
         // custom patrol system --------------------------------------------------------------------
         //Goto random points(patrol) then stop and look around and scan for a bit
         searchT += Time.deltaTime;
 
         if(searchT < 10)
         {
-            //smartTank.SearchRandomPoint();
+            smartTank.SearchRandomPoint();
         }
         else
         {
@@ -121,7 +133,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             if (t > 0.2)
             {
                 t = 0;
-                //smartTank.TurretSpin(rotation);
+                smartTank.TurretSpin(rotation);
                 //Debug.Log(rotation);
                 rotation += 1;
 
@@ -132,7 +144,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             }
         }
 
-        if(searchT >= 20)
+        if(searchT >= 15)
         {
            searchT = 0;
         }
