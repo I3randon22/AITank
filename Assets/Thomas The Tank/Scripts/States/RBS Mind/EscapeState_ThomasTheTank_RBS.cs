@@ -53,7 +53,17 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
                 for (int i = 0; i < smartTank.consumablesFound.Count; i++)
                 {
-                    if (smartTank.lowHealth == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Health")
+                    if(smartTank.lowHealth == true && smartTank.lowAmmo == true && smartTank.lowFuel == true)
+                    {
+                        if(smartTank.consumablesFound.ElementAt(i).Key.tag == "Health" || smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel")
+                        {
+                            Debug.Log("Going to Health/Fuel");
+                            smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
+                            smartTank.GoToLocation(smartTank.consumablePosition);
+                        }
+
+                    }
+                    else if (smartTank.lowHealth == true && (smartTank.consumablesFound.ElementAt(i).Key.tag == "Health" || smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel"))
                     {
                         Debug.Log("Going to Health");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
@@ -65,7 +75,7 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
                         smartTank.GoToLocation(smartTank.consumablePosition);
                     }
-                    else if (smartTank.lowFuel == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel")
+                    else if (smartTank.lowFuel == true && (smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel" || smartTank.consumablesFound.ElementAt(i).Key.tag == "Health"))
                     {
                         Debug.Log("Going to Fuel");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
