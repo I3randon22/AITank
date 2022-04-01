@@ -85,6 +85,7 @@ public class SmartTank_ThomasTheTank_RBS : AITank
     public void RetreatToArea(Vector3 area)
     {
         targetPrefab.transform.position = area;
+        
         FollowPathToPoint(targetPrefab, 1f);
     }
 

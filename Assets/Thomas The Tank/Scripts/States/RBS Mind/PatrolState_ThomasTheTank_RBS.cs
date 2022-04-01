@@ -8,8 +8,6 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 {
     private SmartTank_ThomasTheTank_RBS smartTank;
 
-    float currentTime;
-
     float t, searchT;
     int rotation;
 
@@ -21,6 +19,10 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
     public override Type StateEnter()
     {
+        //Reset values
+        t = 0;
+        searchT = 0;
+        rotation = 0;
 
         smartTank.stats["patrolState"] = true; // add this on every state
         return null;
@@ -57,8 +59,16 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                 smartTank.Theme.Play();
             }
             // ---------------------------------------------------------------------    
-
-            return typeof(ChaseState_ThomasTheTank_RBS); // changes the state to chase
+            smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
+            // ---------------------------------------------------------------------    
+            if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 20)
+            {
+                return typeof(AttackState_ThomasTheTank_RBS); // changes the state to attack
+            }
+            else
+            {
+                return typeof(ChaseState_ThomasTheTank_RBS); // changes the state to chase
+            }
         }
         else if (smartTank.consumablesFound.Count > 0)
         {
