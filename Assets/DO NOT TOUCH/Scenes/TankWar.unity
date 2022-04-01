@@ -77387,7 +77387,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800502784}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7031f3af84a3ab64f9c8d23d0032d8d1, type: 3}
   m_Name: 
@@ -77585,6 +77585,8 @@ MonoBehaviour:
   consumablePosition: {fileID: 0}
   basePosition: {fileID: 0}
   lowHealth: 0
+  lowFuel: 0
+  lowAmmo: 0
   firing: 0
   Theme: {fileID: 0}
 --- !u!114 &1800502793
@@ -77594,7 +77596,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800502784}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b7e8f4f522d8864cb411b1d55d4b2dd, type: 3}
   m_Name: 

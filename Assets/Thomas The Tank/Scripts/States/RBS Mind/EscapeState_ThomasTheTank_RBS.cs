@@ -103,7 +103,7 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                 else
                 {
                     Debug.Log("Retreating...");
-                    area = new Vector3(99, 0, 140);
+                    area = new Vector3(80, 0, 80);
                     smartTank.RetreatToArea(area);
 
                     if(Vector3.Distance(smartTank.transform.position, area) < 20)
