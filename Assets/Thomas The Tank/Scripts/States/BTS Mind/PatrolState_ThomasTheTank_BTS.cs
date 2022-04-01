@@ -37,11 +37,14 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
 
     public override Type StateUpdate()
     {
+        smartTank.SyncDataFound();
+        smartTank.CheckStats();
+
         //If we dont need health or ammo or fuel continue patrolling  
-        if(smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
+        if (smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
         {
 
-            smartTank.SyncDataFound();
+           
 
             //if tank sees other tank go to chase state
             if (smartTank.targetTanksFound.Count > 0)
@@ -72,7 +75,6 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                 //if consumables are found, go to it.
                 smartTank.consumablePosition = smartTank.consumablesFound.First().Key;
                 smartTank.GoToLocation(smartTank.consumablePosition);
-                
             }
             else if (smartTank.basesFound.Count > 0) //if base found attack it
             {
@@ -85,7 +87,7 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             }
             else
             {
-                RandomPatrol();
+                CustomPatrol();
             }
 
 
@@ -98,9 +100,18 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             }
 
         }
-        else
+        else//Low On Stats
         {
-            RandomPatrol();
+            //Enemy Tank Not found
+            if (smartTank.targetTanksFound.Count <= 0)
+            {
+                CustomPatrol();
+            }
+            else //Enemy tank spotted
+            {
+                smartTank.stats["targetSpotted"] = true; // tells the rules system we've found it
+                BasicPatrol(); //Retreat to base instead?
+            }
         }
 
         return null;
@@ -112,14 +123,9 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         scoutPoints[1] = new Vector3(-41.5f, 0, 141.9f);//Top Left
         scoutPoints[2] = new Vector3(28.2f, 0, 146.5f);//Top Middle
     }
-    
-    private void RandomPatrol() 
+
+    private void BasicPatrol()
     {
-        smartTank.targetTankPosition = null;
-        smartTank.consumablePosition = null;
-        smartTank.basePosition = null;
-        /*
-        // Basic Patrol System --------------------------------------------------------------
         smartTank.FollowPoint(); //  basic follows generate point
         currentTime += Time.deltaTime;
         if (currentTime > 10)
@@ -127,8 +133,14 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             smartTank.GeneratePoint(); //  basic generates random point
             currentTime = 0;
         }
-        */
-        // custom patrol system --------------------------------------------------------------------
+    }
+    
+    private void CustomPatrol() 
+    {
+        smartTank.targetTankPosition = null;
+        smartTank.consumablePosition = null;
+        smartTank.basePosition = null;
+       
         //Goto random points(patrol) then stop and look around and scan for a bit
         searchT += Time.deltaTime;
 

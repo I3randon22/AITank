@@ -32,6 +32,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
     public AudioSource Theme;
 
     Vector3 lookPos;
+    Vector3 itemPos;
 
     //BT
     public BTAction healthCheck;
@@ -80,50 +81,44 @@ public class SmartTank_ThomasTheTank_BTS : AITank
     //---------------------------ACTIONS------------------------------------//
     public BTNodesStates HealthCheck()
     {
-        if (!stats["lowFuel"]) //if not low on fuel but low on health get health
+        Debug.Log("a");
+        //keeps running until success
+        if (stats["lowHealth"])
         {
-            //keeps running until success
-            if (stats["lowHealth"])
-            {
-                Debug.Log("Low Health");
-                GrabResource("Health");
-                return BTNodesStates.FAILURE;
-            }
-            else //no longer low health so success and move on
-            {
-                return BTNodesStates.SUCCESS;
-            }
+            Debug.Log("Finding Health");
+            CheckResourceLocation("Health");
+            GrabResource("Health");
+            return BTNodesStates.FAILURE;
         }
-
-        return BTNodesStates.SUCCESS;
+        else //no longer low health so success and move on
+        {
+            return BTNodesStates.SUCCESS;
+        }
     }
 
     public BTNodesStates AmmoCheck()
     {
-        if (!stats["lowFuel"] || !stats["lowHealth"]) //if not on low fuel or health but low on ammo get ammo
+        Debug.Log("b");
+        if (!stats["lowFuel"] || !stats["lowHealth"] && stats["lowAmmo"]) //if not on low fuel or health but low on ammo get ammo
         {
             //keeps running until success
-            if (stats["lowAmmo"])
-            {
-                Debug.Log("Low Ammo");
-                GrabResource("Ammo");
-                return BTNodesStates.FAILURE;
-            }
-            else //no longer low ammo so success and move on
-            {
-                return BTNodesStates.SUCCESS;
-            }
+            Debug.Log("Finding Ammo");
+            GrabResource("Ammo");
+            return BTNodesStates.FAILURE;
         }
-
-        return BTNodesStates.SUCCESS;
+        else //no longer low ammo so success and move on
+        {
+            return BTNodesStates.SUCCESS;
+        }
     }
 
     public BTNodesStates FuelCheck()
     {
+        Debug.Log("c");
         //keeps running until success
         if (stats["lowFuel"])
         {
-            Debug.Log("Low Fuel");
+            Debug.Log("Finding Fuel");
             GrabResource("Fuel");
             return BTNodesStates.FAILURE;
         }
@@ -177,20 +172,28 @@ public class SmartTank_ThomasTheTank_BTS : AITank
                         consumablePosition = consumablesFound.ElementAt(i).Key;
                         break;
                     }
-                    else
-                    {
-                        consumablePosition = null;
-                    }
                 }
             }
             else
             {
+                Debug.Log("Going to consumable");
                 GoToLocation(consumablePosition);
             }
         }
         else
         {
             Debug.Log("Low on " + resourceTag + "but cannot find any...");
+        }
+    }
+
+    public void CheckResourceLocation(string resourceTag)
+    {
+        foreach(GameObject item in GetAllConsumablesFound.Keys)
+        {
+            if (item.tag == resourceTag)
+            {
+                Debug.Log("There is " + resourceTag + " somewhere on the battlefield");
+            }
         }
     }
 
@@ -347,7 +350,7 @@ public class SmartTank_ThomasTheTank_BTS : AITank
         if(GetAmmoLevel < 5)
         {
             lowAmmo = true;
-            //Debug.Log("Ammo At: " + GetAmmoLevel);
+            Debug.Log("Ammo At: " + GetAmmoLevel);
         }
         else
         {

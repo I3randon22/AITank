@@ -19,6 +19,7 @@ public class SmartTank_ThomasTheTank_RBS : AITank
 
     [HideInInspector] float currentTime;
     Rigidbody body;
+    Vector3 lookPos;
 
     public Dictionary<string, bool> stats = new Dictionary<string, bool>();
     public Rules rules = new Rules();
@@ -73,92 +74,18 @@ public class SmartTank_ThomasTheTank_RBS : AITank
         consumablesFound = GetAllConsumablesFound;
         basesFound = GetAllBasesFound;
 
-        
-        
-        //if low health or ammo, go searching
-        if (GetHealthLevel < 50 || GetAmmoLevel < 5)
-        {
-            if (consumablesFound.Count > 0)
-            {
-                consumablePosition = consumablesFound.First().Key;
-                //FollowPathToPoint(consumablePosition, 1f);
-                currentTime += Time.deltaTime;
-                if (currentTime > 10)
-                {
-                    GenerateRandomPoint();
-                    currentTime = 0;
-                }
-            }
-            else
-            {
-                targetTankPosition = null;
-                consumablePosition = null;
-                basePosition = null;
-                //FollowPathToRandomPoint(1f);
-            }
-        }
-        else
-        {
-            //if there is a target found
-            if (targetTanksFound.Count > 0 && targetTanksFound.First().Key != null)
-            {
-                targetTankPosition = targetTanksFound.First().Key;
-                if (targetTankPosition != null)
-                {
-                    //get closer to target, and fire
-                    if (Vector3.Distance(transform.position, targetTankPosition.transform.position) < 25f)
-                    {
-                        //FireAtPoint(targetTankPosition);
-                    }
-                    else
-                    {
-                        //FollowPathToPoint(targetTankPosition, 1f);
-                    }
-                }
-            }
-            else if (consumablesFound.Count > 0)
-            {
-                //if consumables are found, go to it.
-                consumablePosition = consumablesFound.First().Key;
-                FollowPathToPoint(consumablePosition, 1f);
-            }
-            else if (basesFound.Count > 0)
-            {
-                //if base if found
-                basePosition = basesFound.First().Key;
-                if (basePosition != null)
-                {
-                    //go close to it and fire
-                    if (Vector3.Distance(transform.position, basePosition.transform.position) < 25f)
-                    {
-                        //FireAtPoint(basePosition);
-                    }
-                    else
-                    {
-                        //FollowPathToPoint(basePosition, 1f);
-                    }
-                }
-            }
-            else
-            {
-                //searching
-                targetTankPosition = null;
-                consumablePosition = null;
-                basePosition = null;
-                //FollowPathToRandomPoint(1f);
-                currentTime += Time.deltaTime;
-                if (currentTime > 10)
-                {
-                    GenerateRandomPoint();
-                    currentTime = 0;
-                }
-            }
-        }
+       
     }
 
     public override void AIOnCollisionEnter(Collision collision)
     {
       
+    }
+
+    public void RetreatToArea()
+    {
+        targetPrefab.transform.position = new Vector3(99, 0, 140);
+        FollowPathToPoint(targetPrefab, 1f);
     }
 
    
@@ -186,6 +113,32 @@ public class SmartTank_ThomasTheTank_RBS : AITank
     public void GeneratePoint()
     {
         GenerateRandomPoint();
+    }
+
+    public void TurretSpin(int rotation)
+    {
+        lookPos = new Vector3(
+                               transform.position.x + 10 * Mathf.Cos(2 * Mathf.PI * rotation / 8),
+                               transform.position.y,
+                               transform.position.z + 10 * Mathf.Sin(2 * Mathf.PI * rotation / 8));
+
+        FaceTurretToPoint(lookPos);
+
+    }
+
+    public void SearchRandomPoint()
+    {
+        //searching
+        targetTankPosition = null;
+        consumablePosition = null;
+        basePosition = null;
+        FollowPathToRandomPoint(1f);
+        currentTime += Time.deltaTime;
+        if (currentTime > 10)
+        {
+            GenerateRandomPoint();
+            currentTime = 0;
+        }
     }
 
     public void FollowPoint()

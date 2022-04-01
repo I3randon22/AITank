@@ -37,12 +37,14 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
     {
         // Stats Check -------------------------------------------------------------
         smartTank.CheckStats();
+        smartTank.SyncDataFound();
+
         if (smartTank.lowHealth || smartTank.lowFuel || smartTank.lowAmmo)
         {
             return typeof(EscapeState_ThomasTheTank_RBS); // changes the state to chase
         }
 
-        smartTank.SyncDataFound();
+      
         //if tank sees other tank go to chase state
         if (smartTank.targetTanksFound.Count > 0)
         {
@@ -66,7 +68,7 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
         else if (smartTank.basesFound.Count > 0)
         {
-            //if base if found
+            //if base is found
             smartTank.basePosition = smartTank.basesFound.First().Key;
             if (smartTank.basePosition != null)
             {
@@ -75,7 +77,7 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         }
         else
         {
-            RandomPatrol();
+            CustomPatrol();
             foreach (var item in smartTank.rules.GetRules)
             {
                 if(item.CheckRule(smartTank.stats) != null)
@@ -89,21 +91,11 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         return null;
     }
 
-    
-    private void RandomPatrol() 
+    private void CustomPatrol() 
     {
         smartTank.targetTankPosition = null;
         smartTank.consumablePosition = null;
         smartTank.basePosition = null;
-
-        // Basic Patrol System --------------------------------------------------------------
-        smartTank.FollowPoint(); //  basic follows generate point
-        currentTime += Time.deltaTime;
-        if (currentTime > 10)
-        {
-            smartTank.GeneratePoint(); //  basic generates random point
-            currentTime = 0;
-        }
 
         // custom patrol system --------------------------------------------------------------------
         //Goto random points(patrol) then stop and look around and scan for a bit
@@ -111,7 +103,7 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
         if(searchT < 10)
         {
-            //smartTank.SearchRandomPoint();
+            smartTank.SearchRandomPoint();
         }
         else
         {
@@ -120,8 +112,8 @@ public class PatrolState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
             if (t > 0.2)
             {
                 t = 0;
-                //smartTank.TurretSpin(rotation);
-                //Debug.Log(rotation);
+                smartTank.TurretSpin(rotation);
+
                 rotation += 1;
 
                 if (rotation > 8)
