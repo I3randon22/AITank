@@ -206,6 +206,14 @@ public class SmartTank_ThomasTheTank_BTS : AITank
         }
     }
 
+    public void CheckBases()
+    {
+        if(GetMyBases.Count < 2) //Base was Destroyed?
+        {
+            //ReturnToBase();
+        }
+    }
+
 
     void InitFSM()
     {

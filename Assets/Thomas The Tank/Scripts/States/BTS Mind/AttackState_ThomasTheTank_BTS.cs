@@ -8,7 +8,10 @@ public class AttackState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
 {
     private SmartTank_ThomasTheTank_BTS smartTank;
     private Vector3 TargetLocationRotation;
-
+    float currentTime = 0;
+    bool NextPoint = true;
+    int CirlePoint = 0;
+    
     public AttackState_ThomasTheTank_BTS(SmartTank_ThomasTheTank_BTS smartTank)
     {
         this.smartTank = smartTank;
@@ -17,6 +20,9 @@ public class AttackState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
     public override Type StateEnter()
     {
         smartTank.stats["attackState"] = true; // add this on every state
+        currentTime = 0;
+        NextPoint = true;
+        CirlePoint = 0;
         return null;
     }
 
@@ -26,7 +32,8 @@ public class AttackState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         return null;
     }
 
-    bool NextPoint = true;
+    
+
     public override Type StateUpdate()
     {
        
@@ -42,42 +49,46 @@ public class AttackState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
             smartTank.targetTankPosition = smartTank.targetTanksFound.First().Key;
             if (smartTank.targetTankPosition != null)
             {
-                if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 25f)
+                if (Vector3.Distance(smartTank.transform.position, smartTank.targetTankPosition.transform.position) < 35f)
                 {
                     
-                    if (smartTank.firing)
+                    currentTime -= Time.deltaTime;
+                    if (currentTime <= 0)
                     {
-                        Debug.Log("Fired");
-                        int CirlePoint = 0; // which point of the circle do i follow
-                        //Creates the circle around the tank ---------------------------------------------------------------------
-                        TargetLocationRotation = new Vector3(
-                                smartTank.targetTankPosition.transform.position.x + 15 * Mathf.Cos(2 * Mathf.PI * CirlePoint / 8),
-                                smartTank.targetTankPosition.transform.position.y,
-                                smartTank.targetTankPosition.transform.position.z + 15 * Mathf.Sin(2 * Mathf.PI * CirlePoint / 8));
-                        //--------------------------------------------------------------------------------------------------------
-                       
-                        if (CirlePoint > 8)
-                            CirlePoint = 0;
-                        else
-                        {
-                            if (NextPoint)
-                            {
-                                CirlePoint += 1;
-                                NextPoint = false;
-                            }
-                        }
+                        NextPoint = true;
+                        smartTank.ShootAt(smartTank.targetTankPosition);
+                        currentTime = 3f;
                     }
                     else
                     {
-                        smartTank.ShootAt(smartTank.targetTankPosition);
-                        NextPoint = true;
+                        // which point of the circle do i follow
+
+                        Debug.Log(CirlePoint);
+                        if (CirlePoint > 8)
+                            CirlePoint = 0;
+
+                        if (NextPoint)
+                        {
+                            NextPoint = false;
+                            //Creates the circle around the tank ---------------------------------------------------------------------
+                            TargetLocationRotation = new Vector3(
+                                smartTank.targetTankPosition.transform.position.x + 20 * Mathf.Cos(2 * Mathf.PI * CirlePoint / 8),
+                                smartTank.targetTankPosition.transform.position.y,
+                                smartTank.targetTankPosition.transform.position.z + 20 * Mathf.Sin(2 * Mathf.PI * CirlePoint / 8));
+                            //--------------------------------------------------------------------------------------------------------
+
+                            CirlePoint += 1;
+                            
+                        }
+
+                        smartTank.OrbitTank(TargetLocationRotation);
                     }
 
-                    smartTank.OrbitTank(TargetLocationRotation);
+
                     return null;
                 }
                 else
-                {
+                {          
                     return typeof(ChaseState_ThomasTheTank_BTS);
                 }
 
@@ -92,8 +103,8 @@ public class AttackState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
                 //go close to it and fire
                 if (Vector3.Distance(smartTank.transform.position, smartTank.basePosition.transform.position) < 35f)
                 {
-                    
-                    smartTank.ShootAt(smartTank.basePosition);
+                    if(smartTank.basesFound.First().Key != null)
+                        smartTank.ShootAt(smartTank.basePosition);
                 }
                 else
                 {
