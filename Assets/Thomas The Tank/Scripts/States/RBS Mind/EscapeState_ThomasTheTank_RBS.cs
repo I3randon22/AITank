@@ -74,7 +74,7 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
                         smartTank.GoToLocation(smartTank.consumablePosition);
                     }
-                    else if (smartTank.lowAmmo == true && smartTank.consumablesFound.ElementAt(i).Key.tag == "Ammo")
+                    else if (smartTank.lowAmmo == true && (smartTank.consumablesFound.ElementAt(i).Key.tag == "Ammo" || smartTank.consumablesFound.ElementAt(i).Key.tag == "Health" || smartTank.consumablesFound.ElementAt(i).Key.tag == "Fuel"))
                     {
                         Debug.Log("Going to Ammo");
                         smartTank.consumablePosition = smartTank.consumablesFound.ElementAt(i).Key;
