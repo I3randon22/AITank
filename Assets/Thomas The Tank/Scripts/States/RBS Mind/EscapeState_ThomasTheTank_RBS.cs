@@ -8,6 +8,8 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 {
     private SmartTank_ThomasTheTank_RBS smartTank;
     float currentTime;
+    bool hasRetreated;
+    Vector3 area;
 
     public EscapeState_ThomasTheTank_RBS(SmartTank_ThomasTheTank_RBS smartTank)
     {
@@ -16,6 +18,7 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
 
     public override Type StateEnter()
     {
+        hasRetreated = false;
         smartTank.stats["escapeState"] = true; // add this on every state
         return null;
     }
@@ -32,6 +35,8 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
         smartTank.SyncDataFound();
 
         smartTank.CheckStats();
+
+
         //if the tank has sufficient resources, return to patrol state
         if ((smartTank.lowHealth == false) && (smartTank.lowFuel == false) && (smartTank.lowAmmo == false))
         {
@@ -83,14 +88,30 @@ public class EscapeState_ThomasTheTank_RBS : BaseState_ThomasTheTank_FSM
                     }
                     else
                     {
-                        RandomRoam();
+                        //RandomRoam();
                     }
 
                 }
             }
             else
             {
-                RandomRoam();
+                if(hasRetreated)
+                {
+                    Debug.Log("Roaming...");
+                    RandomRoam();
+                }
+                else
+                {
+                    Debug.Log("Retreating...");
+                    area = new Vector3(99, 0, 140);
+                    smartTank.RetreatToArea(area);
+
+                    if(Vector3.Distance(smartTank.transform.position, area) < 20)
+                    {
+                        hasRetreated = true;
+                    }
+                }
+                
             }
         }
 
