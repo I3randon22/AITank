@@ -44,7 +44,6 @@ public class PatrolState_ThomasTheTank_BTS : BaseState_ThomasTheTank_FSM
         if (smartTank.regenSequence != null && smartTank.regenSequence.Evaluate() == BTNodesStates.SUCCESS)
         {
 
-           
 
             //if tank sees other tank go to chase state
             if (smartTank.targetTanksFound.Count > 0)
